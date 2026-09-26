@@ -1,0 +1,2282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wildlife of the Earth — The True Nature | Sevak IVA</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;600;700;800&family=Cormorant+Garamond:ital,wght@0,500;0,700;1,500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --primary:#22c55e; --primary-2:#0ea5e9; --accent:#f97316; --accent-2:#facc15;
+  --earth:#a16207; --snow:#bae6fd; --desert:#fcd34d; --grass:#84cc16;
+  --forest:#10b981; --ocean:#0284c7; --sky:#38bdf8; --danger:#ef4444;
+  --bg:#04140c; --bg-2:#08201a; --surface:rgba(255,255,255,.04);
+  --glass:rgba(255,255,255,.08); --border:rgba(34,197,94,.25);
+  --text:#f0fff5; --muted:#c8e6d5;
+  --font-display:'Orbitron',monospace; --font-body:'Inter',sans-serif;
+  --font-serif:'Cormorant Garamond',serif;
+  --backdrop-darkness:0.58; --hero-darkness:0.48; --nature-darkness:0.55;
+  --backdrop-brightness:1.05; --backdrop-saturation:1.15;
+}
+body.bright-mode{
+  --backdrop-darkness:0.32; --hero-darkness:0.28; --nature-darkness:0.32;
+  --backdrop-brightness:1.22; --backdrop-saturation:1.35;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--font-body);line-height:1.75;overflow-x:hidden;-webkit-font-smoothing:antialiased;transition:background .6s ease}
+body.no-scroll{overflow:hidden}
+#particleCanvas{position:fixed;inset:0;z-index:0;pointer-events:none}
+a{color:inherit;text-decoration:none}
+img{max-width:100%;display:block}
+.c-green{color:#4ade80;font-weight:800;text-shadow:0 0 14px rgba(74,222,128,.8),0 0 30px rgba(34,197,94,.5)}
+.c-blue{color:#5eead4;font-weight:800;text-shadow:0 0 14px rgba(94,234,212,.8),0 0 30px rgba(14,165,233,.5)}
+.c-snow{color:#bae6fd;font-weight:800;text-shadow:0 0 14px rgba(186,230,253,.9),0 0 30px rgba(56,189,248,.5)}
+.c-desert{color:#fcd34d;font-weight:800;text-shadow:0 0 14px rgba(252,211,77,.9),0 0 30px rgba(250,204,21,.5)}
+.c-grass{color:#bef264;font-weight:800;text-shadow:0 0 14px rgba(190,242,100,.9),0 0 30px rgba(132,204,22,.5)}
+.c-forest{color:#34d399;font-weight:800;text-shadow:0 0 14px rgba(52,211,153,.85),0 0 30px rgba(16,185,129,.5)}
+.c-ocean{color:#38bdf8;font-weight:800;text-shadow:0 0 14px rgba(56,189,248,.85),0 0 30px rgba(2,132,199,.5)}
+.c-sky{color:#a5f3fc;font-weight:800;text-shadow:0 0 14px rgba(165,243,252,.9),0 0 30px rgba(56,189,248,.5)}
+.c-fire{color:#fb923c;font-weight:800;text-shadow:0 0 14px rgba(251,146,60,.9),0 0 30px rgba(249,115,22,.5)}
+.c-white{color:#ffffff;font-weight:800;text-shadow:0 0 14px rgba(255,255,255,.75),0 0 30px rgba(34,197,94,.4)}
+
+.nature-backdrop{
+  position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background:
+    linear-gradient(180deg,
+      rgba(4,20,12,var(--backdrop-darkness)) 0%,
+      rgba(4,20,12,calc(var(--backdrop-darkness) - 0.08)) 25%,
+      rgba(4,20,12,calc(var(--backdrop-darkness) - 0.04)) 55%,
+      rgba(4,20,12,var(--backdrop-darkness)) 100%),
+    radial-gradient(circle at 20% 20%,rgba(34,197,94,.18),transparent 40%),
+    radial-gradient(circle at 80% 60%,rgba(14,165,233,.14),transparent 45%),
+    radial-gradient(circle at 50% 85%,rgba(249,115,22,.10),transparent 50%),
+    url('https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1920&q=85') center/cover no-repeat;
+  filter:brightness(var(--backdrop-brightness)) saturate(var(--backdrop-saturation));
+  transition:filter .6s ease,background .6s ease;
+}
+@media(max-width:760px){.nature-backdrop{background-position:center}}
+
+.navbar{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 28px;
+  background:rgba(4,20,12,.75);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+}
+.nav-brand{
+  display:flex;align-items:center;gap:10px;
+  font-family:var(--font-display);font-weight:900;font-size:1.05rem;letter-spacing:2px;
+  background:linear-gradient(135deg,var(--primary),var(--primary-2) 50%,var(--accent));
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+  filter:drop-shadow(0 0 14px rgba(34,197,94,.6));
+}
+.nav-links{display:flex;gap:22px;font-size:.86rem;font-weight:700}
+.nav-links a{color:var(--muted);transition:color .3s;position:relative}
+.nav-links a:hover{color:#4ade80;text-shadow:0 0 14px rgba(74,222,128,.75)}
+.nav-links a::after{content:'';position:absolute;left:0;bottom:-6px;width:0;height:2px;background:linear-gradient(90deg,var(--primary),var(--primary-2));transition:width .3s ease;border-radius:2px}
+.nav-links a:hover::after{width:100%}
+.nav-actions{display:flex;align-items:center;gap:10px}
+.nav-brightness{
+  width:38px;height:38px;border-radius:50%;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(135deg,rgba(250,204,21,.18),rgba(34,197,94,.12));
+  border:1px solid rgba(250,204,21,.4);color:var(--accent-2);
+  font-size:1.05rem;transition:all .3s ease;
+}
+.nav-brightness:hover{transform:scale(1.08) rotate(15deg);box-shadow:0 0 20px rgba(250,204,21,.5)}
+.nav-brightness.active{background:linear-gradient(135deg,rgba(250,204,21,.35),rgba(249,115,22,.2));color:#fff;box-shadow:0 0 25px rgba(250,204,21,.6)}
+.nav-sevak{
+  display:flex;align-items:center;gap:8px;padding:9px 18px;border-radius:24px;cursor:pointer;
+  background:linear-gradient(135deg,rgba(34,197,94,.2),rgba(14,165,233,.15));
+  border:1px solid rgba(34,197,94,.4);color:var(--text);
+  font-family:var(--font-body);font-weight:600;font-size:.82rem;letter-spacing:.5px;
+  transition:all .3s ease;
+}
+.nav-sevak:hover{background:linear-gradient(135deg,rgba(34,197,94,.35),rgba(14,165,233,.25));box-shadow:0 0 25px rgba(34,197,94,.35);transform:translateY(-1px)}
+@media(max-width:768px){
+  .navbar{padding:12px 16px}
+  .nav-links{display:none}
+  .nav-brand{font-size:.85rem;letter-spacing:1px}
+  .nav-sevak{padding:7px 12px;font-size:.7rem}
+  .nav-brightness{width:34px;height:34px;font-size:.95rem}
+}
+
+.hero{
+  position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;text-align:center;padding:120px 24px 80px;
+  background:
+    radial-gradient(1000px 600px at 20% 30%,rgba(34,197,94,.22),transparent 65%),
+    radial-gradient(900px 500px at 80% 70%,rgba(14,165,233,.16),transparent 60%),
+    radial-gradient(700px 500px at 50% 100%,rgba(249,115,22,.1),transparent 70%);
+}
+.hero::before{
+  content:'';position:absolute;inset:0;z-index:-1;
+  background:
+    linear-gradient(180deg,
+      rgba(4,20,12,var(--hero-darkness)) 0%,
+      rgba(4,20,12,calc(var(--hero-darkness) + 0.3)) 55%,
+      rgba(4,20,12,.92) 80%,
+      var(--bg) 100%),
+    url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1920&q=85') center/cover no-repeat;
+  filter:brightness(var(--backdrop-brightness)) saturate(var(--backdrop-saturation));
+  transition:filter .6s ease,background .6s ease;
+}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:8px;padding:8px 18px;border-radius:24px;margin-bottom:24px;
+  background:rgba(34,197,94,.18);border:1px solid rgba(34,197,94,.55);
+  font-size:.72rem;letter-spacing:2px;text-transform:uppercase;color:#4ade80;font-weight:800;
+  backdrop-filter:blur(10px);text-shadow:0 0 16px rgba(74,222,128,.7),0 0 30px rgba(34,197,94,.4);
+}
+.hero h1{
+  font-family:var(--font-display);font-weight:900;
+  font-size:clamp(2rem,6.5vw,5rem);letter-spacing:3px;line-height:1.08;
+  background:linear-gradient(135deg,#ffffff 5%,#4ade80 30%,#5eead4 60%,#fcd34d 90%);
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+  margin-bottom:14px;
+  filter:drop-shadow(0 4px 20px rgba(0,0,0,.55)) drop-shadow(0 0 30px rgba(34,197,94,.5));
+  animation:heroIn 1.2s cubic-bezier(.2,.8,.2,1) both;
+}
+.hero h1 small{display:block;font-size:.42em;letter-spacing:5px;margin-top:8px;color:#5eead4;-webkit-text-fill-color:#5eead4;text-shadow:0 0 18px rgba(94,234,212,.7)}
+.hero-sub{
+  font-family:var(--font-serif);font-size:clamp(1.1rem,2.2vw,1.55rem);
+  font-style:italic;color:#ffffff;max-width:820px;margin-bottom:22px;
+  filter:drop-shadow(0 2px 12px rgba(0,0,0,.7)) drop-shadow(0 0 22px rgba(74,222,128,.35));
+  animation:heroIn 1.2s .15s cubic-bezier(.2,.8,.2,1) both;
+}
+.hero-icons{display:flex;gap:24px;justify-content:center;margin:6px 0 22px;flex-wrap:wrap;animation:heroIn 1.2s .22s cubic-bezier(.2,.8,.2,1) both}
+.hero-icon-wrap{display:flex;flex-direction:column;align-items:center;gap:6px}
+.hero-icon{
+  width:96px;height:96px;border-radius:50%;object-fit:cover;
+  border:2px solid rgba(74,222,128,.7);
+  box-shadow:0 0 40px rgba(34,197,94,.55),0 0 80px rgba(14,165,233,.35),inset 0 0 30px rgba(0,0,0,.3);
+  transition:transform .5s ease;
+}
+.hero-icon:hover{transform:scale(1.08) rotate(2deg)}
+.hero-icon-wrap .ilabel{
+  font-family:var(--font-display);font-size:.66rem;letter-spacing:3px;color:#4ade80;
+  text-transform:uppercase;font-weight:900;text-shadow:0 0 14px rgba(74,222,128,.85);
+}
+.hero-quote{
+  font-family:var(--font-serif);font-style:italic;
+  font-size:clamp(.92rem,1.5vw,1.1rem);color:#ffe6a8;
+  max-width:700px;margin-bottom:30px;padding:14px 24px;border-radius:14px;
+  background:rgba(4,20,12,.55);backdrop-filter:blur(10px);
+  border:1px solid rgba(34,197,94,.45);
+  filter:drop-shadow(0 2px 10px rgba(0,0,0,.6)) drop-shadow(0 0 22px rgba(34,197,94,.4));
+  text-shadow:0 0 20px rgba(190,242,100,.7);
+  animation:heroIn 1.2s .3s cubic-bezier(.2,.8,.2,1) both;
+  transition:opacity .6s ease;min-height:60px;
+  display:flex;align-items:center;justify-content:center;text-align:center;
+}
+.hero-tags{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;margin-bottom:44px;animation:heroIn 1.2s .38s cubic-bezier(.2,.8,.2,1) both}
+.hero-tags span{padding:9px 20px;border-radius:24px;font-size:.8rem;font-weight:700;background:rgba(4,20,12,.55);border:1px solid rgba(34,197,94,.4);color:#f0fff5;backdrop-filter:blur(10px);text-shadow:0 0 14px rgba(74,222,128,.5)}
+.hero-cta{
+  display:inline-flex;align-items:center;gap:12px;padding:16px 38px;border-radius:40px;cursor:pointer;border:none;
+  background:linear-gradient(135deg,var(--primary),var(--primary-2));
+  color:#031a0e;font-family:var(--font-body);font-weight:800;font-size:1rem;letter-spacing:1px;
+  text-transform:uppercase;box-shadow:0 12px 40px rgba(34,197,94,.55);
+  transition:all .35s cubic-bezier(.2,.8,.2,1);
+  animation:heroIn 1.2s .45s cubic-bezier(.2,.8,.2,1) both;
+}
+.hero-cta:hover{transform:translateY(-3px) scale(1.03);box-shadow:0 20px 55px rgba(34,197,94,.75)}
+.hero-scroll{
+  position:absolute;bottom:30px;left:50%;transform:translateX(-50%);
+  color:#d1fae5;font-size:.72rem;letter-spacing:3px;text-transform:uppercase;
+  animation:bounceDown 2.4s ease-in-out infinite;
+  filter:drop-shadow(0 2px 8px rgba(0,0,0,.8));
+  text-shadow:0 0 14px rgba(74,222,128,.7);font-weight:700;
+}
+@keyframes heroIn{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+@keyframes bounceDown{0%,100%{transform:translateX(-50%) translateY(0);opacity:.6}50%{transform:translateX(-50%) translateY(8px);opacity:1}}
+
+.section{position:relative;z-index:1;padding:90px 24px;max-width:1100px;margin:0 auto}
+.section-head{text-align:center;margin-bottom:56px}
+.section-num{
+  display:inline-block;font-family:var(--font-display);font-size:.82rem;letter-spacing:5px;
+  color:#4ade80;margin-bottom:16px;font-weight:900;
+  text-shadow:0 0 22px rgba(74,222,128,.95),0 0 50px rgba(34,197,94,.7),0 0 90px rgba(34,197,94,.4);
+}
+.section h2{
+  font-family:var(--font-serif);font-weight:700;
+  font-size:clamp(2rem,4.8vw,3.4rem);letter-spacing:.5px;line-height:1.15;margin-bottom:16px;
+  filter:drop-shadow(0 3px 15px rgba(0,0,0,.5)) drop-shadow(0 0 30px rgba(34,197,94,.35));
+  background:linear-gradient(135deg,#ffffff 10%,#d1fae5 40%,#ffffff 100%);
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+}
+.section h2 em{
+  font-style:italic;
+  background:linear-gradient(135deg,#4ade80 0%,#5eead4 50%,#fcd34d 100%);
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+  filter:drop-shadow(0 0 24px rgba(74,222,128,.9)) drop-shadow(0 0 50px rgba(34,197,94,.5));
+}
+.section-sub{font-size:1.1rem;color:#ecfdf5;max-width:680px;margin:0 auto;font-family:var(--font-body);font-weight:600;text-shadow:0 0 18px rgba(74,222,128,.4),0 0 2px rgba(0,0,0,.8)}
+.lead{
+  font-family:var(--font-serif);font-size:1.22rem;line-height:1.9;
+  color:#f0fdf4;font-style:italic;max-width:820px;margin:0 auto 40px;text-align:center;
+  filter:drop-shadow(0 2px 10px rgba(0,0,0,.5)) drop-shadow(0 0 22px rgba(74,222,128,.2));
+  text-shadow:0 0 20px rgba(74,222,128,.3);
+}
+.lead strong{color:#4ade80;font-style:normal;font-weight:800;text-shadow:0 0 18px rgba(74,222,128,.75),0 0 40px rgba(34,197,94,.4)}
+.wisdom-box{
+  margin:30px auto 40px;max-width:880px;padding:28px 32px;border-radius:20px;
+  background:radial-gradient(500px 200px at 50% 0%,rgba(34,197,94,.24),transparent 70%),linear-gradient(160deg,rgba(4,20,12,.68),rgba(4,20,12,.5));
+  border:1px solid rgba(34,197,94,.55);
+  font-family:var(--font-serif);font-style:italic;font-size:1.15rem;
+  color:#f0fdf4;line-height:1.95;text-align:center;
+  backdrop-filter:blur(14px);
+  filter:drop-shadow(0 10px 30px rgba(0,0,0,.4)) drop-shadow(0 0 40px rgba(34,197,94,.2));
+  text-shadow:0 0 14px rgba(74,222,128,.4);
+}
+.wisdom-box strong{color:#86efac;font-style:normal;font-weight:800;text-shadow:0 0 20px rgba(74,222,128,.85),0 0 40px rgba(34,197,94,.5)}
+.wisdom-box .wlabel{
+  display:block;font-family:var(--font-display);font-style:normal;font-size:.74rem;letter-spacing:4px;
+  color:#86efac;margin-bottom:14px;text-transform:uppercase;font-weight:900;
+  text-shadow:0 0 22px rgba(74,222,128,.95),0 0 45px rgba(34,197,94,.55);
+}
+.quote-rotator{
+  margin:36px auto 44px;max-width:800px;padding:28px 32px;border-radius:22px;text-align:center;
+  background:radial-gradient(500px 200px at 50% 0%,rgba(14,165,233,.2),transparent 70%),linear-gradient(160deg,rgba(4,20,12,.68),rgba(4,20,12,.5));
+  border:1px solid rgba(14,165,233,.45);backdrop-filter:blur(14px);
+  box-shadow:0 20px 50px rgba(0,0,0,.4),0 0 50px rgba(14,165,233,.25);
+  position:relative;overflow:hidden;
+}
+.quote-rotator::before{content:'❝';position:absolute;top:-20px;left:16px;font-family:var(--font-serif);font-size:6rem;color:rgba(74,222,128,.22);line-height:1}
+.quote-rotator::after{content:'❞';position:absolute;bottom:-40px;right:16px;font-family:var(--font-serif);font-size:6rem;color:rgba(94,234,212,.22);line-height:1}
+.quote-rotator .quote-text{
+  font-family:var(--font-serif);font-style:italic;font-size:clamp(1.12rem,2vw,1.38rem);
+  color:#ffffff;line-height:1.9;transition:opacity .6s ease;min-height:70px;position:relative;z-index:1;
+  text-shadow:0 0 18px rgba(74,222,128,.45),0 0 40px rgba(34,197,94,.22);
+}
+.quote-rotator .quote-author{
+  display:block;margin-top:14px;font-family:var(--font-display);font-size:.8rem;letter-spacing:3px;
+  color:#4ade80;text-transform:uppercase;font-weight:900;
+  text-shadow:0 0 18px rgba(74,222,128,.85),0 0 40px rgba(34,197,94,.5);
+  transition:opacity .6s ease;position:relative;z-index:1;
+}
+.quote-rotator .quote-dots{display:flex;gap:8px;justify-content:center;margin-top:16px;position:relative;z-index:1}
+.quote-rotator .quote-dots span{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.25);transition:all .4s ease;cursor:pointer}
+.quote-rotator .quote-dots span.active{background:linear-gradient(135deg,var(--primary),var(--primary-2));width:24px;border-radius:4px;box-shadow:0 0 14px rgba(34,197,94,.75)}
+
+#wheel{padding-top:60px;background:radial-gradient(700px 500px at 50% 50%,rgba(34,197,94,.18),transparent 70%)}
+.wheel-layout{display:grid;grid-template-columns:1.1fr 1fr;gap:50px;align-items:center;margin-top:30px}
+@media(max-width:820px){.wheel-layout{grid-template-columns:1fr;gap:30px}}
+.wheel{position:relative;width:100%;aspect-ratio:1;max-width:460px;margin:0 auto}
+.wheel::before{content:'';position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 30% 30%,rgba(34,197,94,.2),transparent 60%),radial-gradient(circle at 70% 70%,rgba(14,165,233,.22),transparent 60%),radial-gradient(circle at 50% 50%,rgba(249,115,22,.2),transparent 75%);animation:wheelPulse 4s ease-in-out infinite}
+@keyframes wheelPulse{0%,100%{transform:scale(1);opacity:.85}50%{transform:scale(1.07);opacity:1}}
+.wheel-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:130px;height:130px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(circle at 30% 30%,rgba(34,197,94,.6),rgba(14,165,233,.4) 50%,rgba(249,115,22,.5));box-shadow:0 0 70px rgba(34,197,94,.65),0 0 140px rgba(14,165,233,.4),inset 0 0 40px rgba(255,255,255,.15);border:1px solid rgba(74,222,128,.4);z-index:2;animation:wheelCenterFloat 5s ease-in-out infinite}
+.wheel-center .wc-emoji{font-size:2.2rem;line-height:1}
+.wheel-center .wc-label{font-family:var(--font-display);font-size:.62rem;letter-spacing:2px;color:#f0fdf4;margin-top:4px;font-weight:900;text-shadow:0 0 14px rgba(0,0,0,.7)}
+@keyframes wheelCenterFloat{0%,100%{transform:translate(-50%,-50%) scale(1)}50%{transform:translate(-50%,-52%) scale(1.04)}}
+.wheel-center::after{content:'';position:absolute;inset:-14px;border-radius:50%;border:1px dashed rgba(74,222,128,.6);animation:spin 30s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.wheel-node{position:absolute;transform:translate(-50%,-50%);padding:9px 14px;border-radius:22px;cursor:pointer;background:rgba(6,24,16,.94);backdrop-filter:blur(10px);border:1px solid var(--border);font-family:var(--font-body);font-weight:800;font-size:.74rem;letter-spacing:.5px;white-space:nowrap;transition:all .35s cubic-bezier(.2,.8,.2,1);z-index:3;box-shadow:0 6px 20px rgba(0,0,0,.4)}
+.wheel-node .dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:7px;vertical-align:middle}
+.wheel-node[data-region="land"]{color:#bef264;border-color:rgba(190,242,100,.85);text-shadow:0 0 16px rgba(190,242,100,.9)}
+.wheel-node[data-region="land"] .dot{background:#bef264;box-shadow:0 0 16px #bef264}
+.wheel-node[data-region="snow"]{color:#bae6fd;border-color:rgba(186,230,253,.85);text-shadow:0 0 16px rgba(186,230,253,.9)}
+.wheel-node[data-region="snow"] .dot{background:#bae6fd;box-shadow:0 0 16px #bae6fd}
+.wheel-node[data-region="desert"]{color:#fcd34d;border-color:rgba(252,211,77,.85);text-shadow:0 0 16px rgba(252,211,77,.9)}
+.wheel-node[data-region="desert"] .dot{background:#fcd34d;box-shadow:0 0 16px #fcd34d}
+.wheel-node[data-region="grassland"]{color:#a3e635;border-color:rgba(163,230,53,.85);text-shadow:0 0 16px rgba(163,230,53,.9)}
+.wheel-node[data-region="grassland"] .dot{background:#a3e635;box-shadow:0 0 16px #a3e635}
+.wheel-node[data-region="forest"]{color:#34d399;border-color:rgba(52,211,153,.85);text-shadow:0 0 16px rgba(52,211,153,.9)}
+.wheel-node[data-region="forest"] .dot{background:#34d399;box-shadow:0 0 16px #34d399}
+.wheel-node[data-region="water"]{color:#38bdf8;border-color:rgba(56,189,248,.85);text-shadow:0 0 16px rgba(56,189,248,.9)}
+.wheel-node[data-region="water"] .dot{background:#38bdf8;box-shadow:0 0 16px #38bdf8}
+.wheel-node[data-region="air"]{color:#a5f3fc;border-color:rgba(165,243,252,.85);text-shadow:0 0 16px rgba(165,243,252,.9)}
+.wheel-node[data-region="air"] .dot{background:#a5f3fc;box-shadow:0 0 16px #a5f3fc}
+.wheel-node:hover,.wheel-node.active{background:rgba(255,255,255,.18);box-shadow:0 0 35px currentColor,0 0 70px currentColor;transform:translate(-50%,-50%) scale(1.16);border-color:#fff;color:#ffffff;text-shadow:0 0 24px #ffffff}
+.wheel-info{padding:34px 32px;border-radius:22px;background:rgba(4,20,12,.72);border:1px solid rgba(74,222,128,.28);backdrop-filter:blur(16px);min-height:300px;transition:all .4s cubic-bezier(.2,.8,.2,1);box-shadow:0 15px 40px rgba(0,0,0,.4),0 0 50px rgba(34,197,94,.18)}
+.wheel-info h3{font-family:var(--font-serif);font-size:1.7rem;font-weight:700;margin-bottom:6px;background:linear-gradient(135deg,#4ade80 0%,#5eead4 60%,#fcd34d 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:.5px;filter:drop-shadow(0 0 22px rgba(74,222,128,.75)) drop-shadow(0 0 44px rgba(34,197,94,.4))}
+.wheel-info .role{font-size:.76rem;letter-spacing:3px;text-transform:uppercase;color:#86efac;margin-bottom:18px;font-weight:900;text-shadow:0 0 18px rgba(74,222,128,.85),0 0 36px rgba(34,197,94,.5)}
+.wheel-info p{color:#ecfdf5;font-size:1.02rem;line-height:1.95;font-weight:500;text-shadow:0 0 14px rgba(74,222,128,.2)}
+.wheel-info p strong{color:#fff;font-weight:800}
+.wheel-info .pillar-tag{display:inline-block;margin-top:16px;padding:7px 14px;border-radius:20px;background:linear-gradient(135deg,rgba(249,115,22,.28),rgba(34,197,94,.2));border:1px solid rgba(249,115,22,.7);color:#fed7aa;font-size:.74rem;font-weight:900;letter-spacing:1px;text-transform:uppercase;text-shadow:0 0 16px rgba(250,204,21,.85)}
+
+.pillar-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:18px;margin-top:20px}
+.pillar-card{position:relative;padding:34px 22px;border-radius:20px;cursor:pointer;background:rgba(4,20,12,.65);border:1px solid var(--border);text-align:center;transition:all .4s cubic-bezier(.2,.8,.2,1);overflow:hidden;backdrop-filter:blur(12px)}
+.pillar-card::before{content:'';position:absolute;inset:0;opacity:0;background:linear-gradient(135deg,rgba(34,197,94,.22),rgba(14,165,233,.18));transition:opacity .4s ease}
+.pillar-card:hover{transform:translateY(-8px);border-color:var(--primary);box-shadow:0 20px 45px rgba(0,0,0,.5),0 0 50px rgba(34,197,94,.4)}
+.pillar-card:hover::before{opacity:1}
+.pillar-card>*{position:relative;z-index:1}
+.pillar-icon{font-size:2.6rem;margin-bottom:14px;display:block;filter:drop-shadow(0 0 18px rgba(74,222,128,.6))}
+.pillar-card h3{font-family:var(--font-display);font-size:1.02rem;font-weight:900;letter-spacing:1.5px;margin-bottom:10px;background:linear-gradient(135deg,#ffffff 10%,#4ade80 50%,#5eead4 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;filter:drop-shadow(0 0 18px rgba(74,222,128,.7))}
+.pillar-card p{font-size:.88rem;color:#ecfdf5;line-height:1.7;font-weight:500;text-shadow:0 0 12px rgba(74,222,128,.2)}
+.pillar-card .pillar-sanskrit{display:block;margin-top:12px;font-family:var(--font-serif);font-style:italic;color:#4ade80;font-size:1rem;font-weight:600;text-shadow:0 0 16px rgba(74,222,128,.75),0 0 32px rgba(34,197,94,.4)}
+
+.pillar-section{max-width:1100px;padding-top:80px;padding-bottom:80px;border-top:1px solid var(--border)}
+.pillar-header{text-align:center;margin-bottom:50px}
+.pillar-header .num{font-family:var(--font-display);font-size:.85rem;letter-spacing:5px;color:#4ade80;font-weight:900;text-shadow:0 0 22px rgba(74,222,128,.95),0 0 50px rgba(34,197,94,.65)}
+.pillar-header h2{margin-top:12px}
+.pillar-header .sub{font-family:var(--font-serif);font-style:italic;font-size:1.22rem;color:#ecfdf5;margin-top:10px;font-weight:600;text-shadow:0 0 18px rgba(74,222,128,.4),0 0 2px rgba(0,0,0,.8)}
+
+.practice{display:grid;grid-template-columns:1fr 1.2fr;gap:36px;align-items:center;margin-bottom:60px;padding:32px;border-radius:22px;background:rgba(4,20,12,.65);border:1px solid var(--border);transition:all .4s ease;backdrop-filter:blur(12px)}
+.practice:hover{border-color:rgba(74,222,128,.55);box-shadow:0 15px 50px rgba(0,0,0,.5),0 0 40px rgba(34,197,94,.25)}
+.practice.reverse{grid-template-columns:1.2fr 1fr}
+.practice.reverse .practice-media{order:2}
+@media(max-width:820px){.practice,.practice.reverse{grid-template-columns:1fr;gap:22px;padding:22px}.practice.reverse .practice-media{order:0}}
+.practice-media{position:relative;border-radius:16px;overflow:hidden;aspect-ratio:4/3;background:rgba(0,0,0,.4);border:1px solid var(--border);display:flex;align-items:center;justify-content:center}
+.practice-media img{width:100%;height:100%;object-fit:cover;transition:transform .6s cubic-bezier(.2,.8,.2,1)}
+.practice:hover .practice-media img{transform:scale(1.05)}
+.practice-media::after{content:'';position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,transparent 60%,rgba(4,20,12,.5))}
+.practice-media .img-badge{position:absolute;top:12px;left:12px;z-index:2;padding:6px 12px;border-radius:20px;font-size:.7rem;font-weight:900;letter-spacing:1.5px;text-transform:uppercase;background:rgba(4,20,12,.88);backdrop-filter:blur(10px);border:1px solid rgba(74,222,128,.7);color:#86efac;text-shadow:0 0 14px rgba(74,222,128,.85)}
+.practice-body h3{font-family:var(--font-serif);font-size:1.72rem;font-weight:700;margin-bottom:8px;letter-spacing:.3px;background:linear-gradient(135deg,#ffffff 10%,#4ade80 60%,#5eead4 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;filter:drop-shadow(0 0 20px rgba(74,222,128,.6))}
+.practice-body h3 .sanskrit{font-style:italic;font-size:1.15rem;font-weight:600;display:block;margin-top:2px;background:linear-gradient(135deg,#4ade80,#5eead4);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;filter:drop-shadow(0 0 16px rgba(74,222,128,.85))}
+.practice-body .desc{font-size:1rem;color:#f0fdf4;margin:14px 0 18px;line-height:1.9;font-weight:500}
+.practice-body .desc strong{color:#4ade80;font-weight:800;text-shadow:0 0 16px rgba(74,222,128,.7)}
+.practice-body ul{list-style:none;margin:14px 0}
+.practice-body ul li{position:relative;padding-left:26px;margin-bottom:10px;font-size:.95rem;color:#ecfdf5;font-weight:500;line-height:1.75}
+.practice-body ul li::before{content:'🐾';position:absolute;left:0;color:#4ade80;font-weight:800;text-shadow:0 0 12px rgba(74,222,128,.95)}
+.practice-body ul li strong{color:#ffffff;font-weight:800}
+
+.icon-gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:30px 0}
+.icon-gallery figure{margin:0;border-radius:18px;overflow:hidden;position:relative;border:1px solid rgba(74,222,128,.3);background:rgba(0,0,0,.35);aspect-ratio:3/4;box-shadow:0 18px 50px rgba(0,0,0,.4),0 0 30px rgba(34,197,94,.15)}
+.icon-gallery img{width:100%;height:100%;object-fit:cover;transition:transform .7s ease,filter .7s ease}
+.icon-gallery figure:hover img{transform:scale(1.06);filter:saturate(1.15) brightness(1.05)}
+.icon-gallery figcaption{position:absolute;left:10px;right:10px;bottom:10px;padding:8px 10px;border-radius:12px;background:rgba(4,20,12,.78);backdrop-filter:blur(8px);font-size:.74rem;letter-spacing:1.5px;text-transform:uppercase;color:#86efac;text-align:center;font-weight:800;text-shadow:0 0 12px rgba(74,222,128,.7)}
+@media(max-width:760px){.icon-gallery{grid-template-columns:repeat(2,1fr)}}
+
+.nature-gallery{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:0 0 42px}
+.nature-gallery figure{margin:0;min-height:160px;border-radius:18px;overflow:hidden;position:relative;border:1px solid rgba(255,255,255,.2);background:rgba(0,0,0,.28);box-shadow:0 18px 50px rgba(0,0,0,.3),0 0 30px rgba(34,197,94,.12)}
+.nature-gallery img{width:100%;height:100%;min-height:160px;object-fit:cover;transition:transform .6s ease,filter .6s ease}
+.nature-gallery figure:hover img{transform:scale(1.06);filter:saturate(1.2) brightness(1.1)}
+.nature-gallery figcaption{position:absolute;left:10px;right:10px;bottom:10px;padding:7px 10px;border-radius:12px;background:rgba(0,0,0,.6);backdrop-filter:blur(8px);font-size:.72rem;letter-spacing:1px;text-transform:uppercase;color:#ffffff;text-align:center;font-weight:700;text-shadow:0 0 12px rgba(74,222,128,.5)}
+@media(max-width:760px){.nature-gallery{grid-template-columns:repeat(2,1fr)}.nature-gallery figure,.nature-gallery img{min-height:120px}}
+
+.devotional-banner{position:relative;margin:44px 0;border-radius:24px;overflow:hidden;display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid rgba(34,197,94,.7);box-shadow:0 25px 70px rgba(0,0,0,.55),0 0 90px rgba(34,197,94,.35);background:linear-gradient(135deg,rgba(34,197,94,.16),rgba(14,165,233,.1))}
+.devotional-banner .dev-img{position:relative;overflow:hidden;min-height:340px}
+.devotional-banner .dev-img img{width:100%;height:100%;object-fit:cover;transition:transform .8s ease}
+.devotional-banner:hover .dev-img img{transform:scale(1.05)}
+.devotional-banner .dev-copy{padding:44px 38px;display:flex;flex-direction:column;justify-content:center}
+.devotional-banner .dev-copy h3{font-family:var(--font-display);font-size:1.5rem;letter-spacing:3px;color:#86efac;margin-bottom:16px;font-weight:900;text-shadow:0 0 30px rgba(74,222,128,.95),0 0 65px rgba(34,197,94,.65)}
+.devotional-banner .dev-copy .shloka{font-family:var(--font-serif);font-style:italic;font-size:1.45rem;color:#f0fdf4;line-height:1.85;margin-bottom:20px;font-weight:600;text-shadow:0 0 22px rgba(74,222,128,.65)}
+.devotional-banner .dev-copy p{font-size:1rem;color:#ecfdf5;line-height:1.95;font-weight:500;text-shadow:0 0 14px rgba(74,222,128,.25)}
+.devotional-banner .dev-copy p strong{color:#ffffff;font-weight:800}
+@media(max-width:820px){.devotional-banner{grid-template-columns:1fr}.devotional-banner .dev-img{min-height:280px}.devotional-banner .dev-copy{padding:28px 24px}}
+
+.determination-box{margin-top:50px;padding:44px 36px 38px;border-radius:26px;text-align:center;background:radial-gradient(700px 340px at 50% 0%,rgba(34,197,94,.28),transparent 70%),radial-gradient(600px 300px at 50% 100%,rgba(14,165,233,.2),transparent 70%),linear-gradient(160deg,rgba(4,20,12,.78),rgba(4,20,12,.55));border:1px solid rgba(34,197,94,.6);position:relative;overflow:hidden;box-shadow:0 25px 70px rgba(0,0,0,.55),0 0 80px rgba(34,197,94,.25);backdrop-filter:blur(14px)}
+.det-earth{width:170px;height:170px;margin:0 auto 22px;border-radius:50%;position:relative;display:flex;align-items:center;justify-content:center;animation:earthFloat 6s ease-in-out infinite}
+.det-earth::before{content:'';position:absolute;inset:-16px;border-radius:50%;background:radial-gradient(circle,rgba(34,197,94,.35),transparent 70%);filter:blur(12px);z-index:0}
+.det-earth::after{content:'';position:absolute;inset:-14px;border-radius:50%;border:1px dashed rgba(74,222,128,.6);animation:spin 40s linear infinite;z-index:2;pointer-events:none}
+.det-earth img{width:170px;height:170px;border-radius:50%;object-fit:cover;display:block;position:relative;z-index:1;box-shadow:0 0 60px rgba(34,197,94,.8),0 0 120px rgba(14,165,233,.5),inset -20px -20px 40px rgba(0,0,0,.55);border:1px solid rgba(74,222,128,.7)}
+@keyframes earthFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.determination-box h3{font-family:var(--font-display);font-size:1.5rem;font-weight:900;margin-bottom:20px;color:#86efac;letter-spacing:4px;text-transform:uppercase;text-shadow:0 0 30px rgba(74,222,128,.95),0 0 65px rgba(34,197,94,.6)}
+.determination-box .det-tag{display:inline-block;margin-bottom:16px;padding:6px 16px;border-radius:20px;background:rgba(34,197,94,.28);border:1px solid rgba(34,197,94,.7);color:#86efac;font-size:.74rem;letter-spacing:3px;font-weight:900;text-transform:uppercase;text-shadow:0 0 16px rgba(74,222,128,.85)}
+.det-carousel{display:flex;align-items:center;gap:18px;justify-content:center;margin-top:22px}
+.det-nav{width:46px;height:46px;border-radius:50%;cursor:pointer;flex-shrink:0;background:linear-gradient(135deg,rgba(34,197,94,.2),rgba(14,165,233,.14));border:1px solid rgba(34,197,94,.65);color:#86efac;font-size:1.15rem;font-weight:700;display:flex;align-items:center;justify-content:center;transition:all .3s ease}
+.det-nav:hover{background:linear-gradient(135deg,rgba(34,197,94,.4),rgba(14,165,233,.25));transform:scale(1.1);box-shadow:0 0 30px rgba(34,197,94,.7);color:#fff}
+.det-nav:active{transform:scale(.95)}
+@media(max-width:640px){.det-carousel{gap:10px}.det-nav{width:40px;height:40px;font-size:1rem}}
+.determination-box p#determinationQuote{flex:1;font-family:var(--font-serif);font-size:1.2rem;font-style:italic;color:#f0fdf4;line-height:2.05;margin:0;text-align:center;transition:opacity .55s ease;min-height:150px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 4px;text-shadow:0 0 16px rgba(74,222,128,.45)}
+.determination-box p#determinationQuote strong{color:#ffffff;font-style:normal;font-weight:800;text-shadow:0 0 22px rgba(74,222,128,.85),0 0 44px rgba(34,197,94,.55)}
+.det-dots{display:flex;gap:8px;justify-content:center;margin-top:20px}
+.det-dots span{width:9px;height:9px;border-radius:50%;background:rgba(255,255,255,.25);cursor:pointer;transition:all .4s ease}
+.det-dots span.active{background:linear-gradient(135deg,var(--accent),var(--primary));width:26px;border-radius:5px;box-shadow:0 0 18px rgba(34,197,94,.8)}
+
+footer{position:relative;z-index:1;padding:50px 24px 40px;text-align:center;border-top:1px solid var(--border);background:rgba(0,0,0,.35);backdrop-filter:blur(10px)}
+footer .foot-brand{font-family:var(--font-display);font-weight:900;letter-spacing:4px;font-size:1.15rem;margin-bottom:14px;background:linear-gradient(135deg,var(--primary),var(--primary-2),var(--accent));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;filter:drop-shadow(0 0 16px rgba(34,197,94,.55))}
+footer .foot-tag{font-family:var(--font-serif);font-style:italic;color:#ecfdf5;margin-bottom:22px;font-size:1.05rem;font-weight:500;text-shadow:0 0 14px rgba(74,222,128,.4)}
+footer .foot-links{display:flex;flex-wrap:wrap;justify-content:center;gap:22px;font-size:.86rem;color:#c8e6d5;margin-bottom:22px;font-weight:600}
+footer .foot-links a{transition:color .3s}
+footer .foot-links a:hover{color:#4ade80;text-shadow:0 0 14px rgba(74,222,128,.7)}
+footer .foot-credit{font-size:.84rem;color:#b8cdbf;letter-spacing:.5px;max-width:680px;margin:0 auto;line-height:1.8}
+footer .foot-credit strong{color:#4ade80;text-shadow:0 0 14px rgba(74,222,128,.7)}
+
+.sevak-orb{position:fixed;bottom:24px;right:24px;z-index:200;width:68px;height:68px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.8rem;background:radial-gradient(circle at 30% 30%,rgba(34,197,94,.9),rgba(14,165,233,.6) 50%,rgba(249,115,22,.5));box-shadow:0 0 40px rgba(34,197,94,.6),0 0 80px rgba(14,165,233,.3);transition:all .35s cubic-bezier(.2,.8,.2,1);border:1px solid rgba(255,255,255,.2)}
+.sevak-orb:hover{transform:scale(1.08)}
+.sevak-orb::after{content:'';position:absolute;inset:-8px;border-radius:50%;border:2px solid rgba(34,197,94,.5);animation:sevakPulse 2s ease-out infinite}
+@keyframes sevakPulse{0%{transform:scale(1);opacity:.8}100%{transform:scale(1.5);opacity:0}}
+.sevak-orb.active{background:radial-gradient(circle at 30% 30%,rgba(252,211,77,.9),rgba(34,197,94,.6) 50%,rgba(14,165,233,.5))}
+.sevak-badge{position:absolute;top:-4px;right:-4px;min-width:20px;height:20px;padding:0 6px;border-radius:10px;background:var(--accent);color:#1a0d04;font-size:.68rem;font-weight:800;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(249,115,22,.5);font-family:var(--font-body)}
+.sevak-badge.hidden{display:none}
+.sevak-panel{position:fixed;bottom:106px;right:24px;z-index:199;width:400px;height:min(620px,calc(100vh - 140px));border-radius:22px;overflow:hidden;display:flex;flex-direction:column;background:linear-gradient(180deg,rgba(8,32,26,.97),rgba(4,20,12,.97));border:1px solid rgba(34,197,94,.25);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);box-shadow:0 25px 80px rgba(0,0,0,.6),0 0 60px rgba(34,197,94,.15);opacity:0;pointer-events:none;transform:translateY(20px) scale(.96);transition:all .4s cubic-bezier(.2,.8,.2,1)}
+.sevak-panel.open{opacity:1;pointer-events:auto;transform:translateY(0) scale(1)}
+@media(max-width:520px){.sevak-panel{right:12px;left:12px;width:auto;bottom:96px;height:min(70vh,540px)}.sevak-orb{width:60px;height:60px;font-size:1.5rem;bottom:20px;right:16px}}
+.sevak-header{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;background:linear-gradient(90deg,rgba(34,197,94,.15),rgba(14,165,233,.08));border-bottom:1px solid var(--border)}
+.sevak-brand{display:flex;align-items:center;gap:10px;font-family:var(--font-display);font-weight:900;font-size:.95rem;letter-spacing:3px;background:linear-gradient(135deg,var(--primary),var(--primary-2));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.sevak-brand .sevak-emoji{font-size:1.3rem;-webkit-text-fill-color:initial;animation:sevakEmoji 3s ease-in-out infinite}
+@keyframes sevakEmoji{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-3px) rotate(6deg)}}
+.sevak-actions{display:flex;align-items:center;gap:8px}
+.sevak-status{display:flex;align-items:center;gap:6px;padding:5px 12px;border-radius:14px;background:rgba(0,0,0,.3);border:1px solid var(--border);font-size:.66rem;font-weight:700;color:#c8e6d5;letter-spacing:1px;text-transform:uppercase}
+.sevak-status .dot{width:6px;height:6px;border-radius:50%;background:#22c55e;animation:dotBlink 1.5s ease-in-out infinite}
+.sevak-status.listening .dot{background:#fcd34d;animation-duration:.5s}
+.sevak-status.speaking .dot{background:#5eead4;animation-duration:.8s}
+.sevak-status.processing .dot{background:#f59e0b;animation-duration:.7s}
+@keyframes dotBlink{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(1.5)}}
+.sevak-btn{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.06);border:1px solid var(--border);color:var(--text);cursor:pointer;font-size:.85rem;transition:all .25s ease}
+.sevak-btn:hover{background:rgba(34,197,94,.2);border-color:var(--primary);color:var(--primary)}
+.sevak-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px;scrollbar-width:thin;scrollbar-color:rgba(34,197,94,.3) transparent}
+.sevak-messages::-webkit-scrollbar{width:5px}
+.sevak-messages::-webkit-scrollbar-thumb{background:rgba(34,197,94,.3);border-radius:3px}
+.sevak-messages::-webkit-scrollbar-track{background:transparent}
+.sevak-msg{max-width:88%;padding:11px 15px;border-radius:14px;font-size:.88rem;line-height:1.65;word-wrap:break-word;animation:msgIn .35s cubic-bezier(.2,.8,.2,1) both;user-select:text;-webkit-user-select:text}
+@keyframes msgIn{from{opacity:0;transform:translateY(10px) scale(.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+.sevak-msg.user{align-self:flex-end;background:linear-gradient(135deg,rgba(34,197,94,.25),rgba(34,197,94,.1));border:1px solid rgba(34,197,94,.35);border-bottom-right-radius:4px;color:#ecfdf5}
+.sevak-msg.sevak{align-self:flex-start;background:linear-gradient(135deg,rgba(14,165,233,.18),rgba(249,115,22,.12));border:1px solid rgba(14,165,233,.3);border-bottom-left-radius:4px;color:#ecfdf5}
+.sevak-msg strong{color:#fff;font-weight:700}
+.sevak-msg a{color:var(--primary-2);border-bottom:1px dashed rgba(14,165,233,.5)}
+.sevak-msg a:hover{color:var(--accent)}
+.sevak-msg .ts{font-size:.62rem;color:var(--muted);display:block;margin-top:5px;opacity:.85}
+.sevak-msg .msg-img{margin-top:10px;border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,.15);cursor:pointer;background:rgba(0,0,0,.4);padding:3px;transition:all .3s ease}
+.sevak-msg .msg-img:hover{border-color:var(--primary);box-shadow:0 4px 25px rgba(34,197,94,.3)}
+.sevak-msg .msg-img img{width:100%;max-height:220px;object-fit:contain;border-radius:8px;display:block}
+.sevak-msg .msg-caption{font-size:.68rem;color:var(--muted);padding:6px 8px;background:rgba(0,0,0,.4);text-align:center;font-style:italic}
+.sevak-typing{align-self:flex-start;padding:12px 16px;border-radius:14px;background:rgba(34,197,94,.15);border-bottom-left-radius:4px;display:flex;gap:5px}
+.sevak-typing span{width:6px;height:6px;border-radius:50%;background:var(--primary);animation:typeBounce 1.4s infinite}
+.sevak-typing span:nth-child(2){animation-delay:.2s}
+.sevak-typing span:nth-child(3){animation-delay:.4s}
+@keyframes typeBounce{0%,60%,100%{transform:translateY(0);opacity:.4}30%{transform:translateY(-7px);opacity:1}}
+.sevak-input{display:flex;align-items:center;gap:8px;padding:10px 14px;border-top:1px solid var(--border);background:rgba(0,0,0,.3)}
+.sevak-input input{flex:1;background:transparent;border:none;outline:none;color:var(--text);font-size:.9rem;font-family:var(--font-body);padding:8px 4px}
+.sevak-input input::placeholder{color:var(--muted);opacity:.9}
+.sevak-input button{width:38px;height:38px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;border:none;font-size:1rem;transition:all .25s ease;flex-shrink:0}
+.sevak-mic{background:rgba(255,255,255,.05);border:1px solid var(--border);color:var(--text)}
+.sevak-mic:hover{border-color:var(--primary);background:rgba(34,197,94,.15);box-shadow:0 0 20px rgba(34,197,94,.3)}
+.sevak-mic.listening{border-color:var(--accent-2);background:rgba(252,211,77,.2);box-shadow:0 0 25px rgba(252,211,77,.5);animation:micPulse .6s ease-in-out infinite}
+@keyframes micPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.1)}}
+.sevak-send{background:linear-gradient(135deg,var(--primary),var(--primary-2));color:#031a0e;font-weight:800;box-shadow:0 4px 18px rgba(34,197,94,.4)}
+.sevak-send:hover{transform:scale(1.08);box-shadow:0 6px 25px rgba(34,197,94,.6)}
+
+.fullpage-overlay{position:fixed;inset:0;z-index:900;display:flex;flex-direction:column;background:radial-gradient(1200px 600px at 50% -10%,rgba(14,165,233,.22),transparent 65%),radial-gradient(900px 500px at 85% 110%,rgba(34,197,94,.18),transparent 60%),rgba(4,20,12,.97);backdrop-filter:blur(30px);-webkit-backdrop-filter:blur(30px);opacity:0;pointer-events:none;transform:translateY(24px) scale(.985);transition:opacity .45s cubic-bezier(.2,.8,.2,1),transform .45s cubic-bezier(.2,.8,.2,1);overflow:hidden}
+.fullpage-overlay.active{opacity:1;pointer-events:auto;transform:translateY(0) scale(1)}
+.fullpage-header{display:flex;align-items:center;justify-content:space-between;padding:16px 28px;border-bottom:1px solid var(--border);background:rgba(8,32,26,.6);flex-shrink:0}
+.fullpage-brand{display:flex;align-items:center;gap:10px;font-family:var(--font-display);font-weight:900;font-size:1rem;letter-spacing:3px;background:linear-gradient(135deg,var(--primary),var(--accent));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.fullpage-actions{display:flex;gap:10px}
+.fp-btn{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.05);border:1px solid var(--border);color:var(--text);cursor:pointer;font-size:.95rem;transition:all .3s ease}
+.fp-btn:hover{border-color:var(--primary);background:rgba(34,197,94,.15);box-shadow:0 0 20px rgba(34,197,94,.3)}
+.fp-btn.speaking{border-color:var(--primary-2);background:rgba(14,165,233,.2);animation:micPulse .8s infinite}
+.fullpage-scroll{flex:1;overflow-y:auto;padding:44px 24px 90px}
+.fullpage-scroll::-webkit-scrollbar{width:6px}
+.fullpage-scroll::-webkit-scrollbar-thumb{background:rgba(34,197,94,.3);border-radius:3px}
+.fullpage-inner{max-width:860px;margin:0 auto;animation:fpIn .55s cubic-bezier(.2,.8,.2,1) both}
+@keyframes fpIn{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+.fullpage-question{display:inline-block;font-size:.78rem;letter-spacing:1.5px;text-transform:uppercase;color:#86efac;padding:8px 16px;border-radius:20px;margin-bottom:24px;background:rgba(34,197,94,.12);border:1px solid rgba(74,222,128,.4);max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:800;text-shadow:0 0 16px rgba(74,222,128,.8)}
+.fullpage-answer{font-size:1.1rem;line-height:1.95;color:#f0fdf4;user-select:text;-webkit-user-select:text;text-shadow:0 0 12px rgba(74,222,128,.2)}
+.fullpage-answer strong{color:#fff;font-weight:800;text-shadow:0 0 14px rgba(74,222,128,.5)}
+.fullpage-answer a{color:var(--primary-2);border-bottom:1px dashed rgba(14,165,233,.5)}
+.fullpage-image{margin:28px 0 10px;border-radius:20px;overflow:hidden;border:1px solid var(--border);cursor:zoom-in;background:rgba(0,0,0,.35);padding:6px;box-shadow:0 25px 70px rgba(0,0,0,.55),0 0 60px rgba(34,197,94,.15);transition:all .35s ease;display:flex;justify-content:center;align-items:center}
+.fullpage-image:hover{border-color:var(--primary);transform:translateY(-3px);box-shadow:0 30px 80px rgba(0,0,0,.6),0 0 80px rgba(34,197,94,.3)}
+.fullpage-image img{max-width:100%;max-height:500px;object-fit:contain;border-radius:14px;display:block}
+
+.lightbox{position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,.92);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s ease;backdrop-filter:blur(10px)}
+.lightbox.active{opacity:1;pointer-events:auto}
+.lightbox-content{max-width:92%;max-height:88%;position:relative;border-radius:14px;overflow:hidden;box-shadow:0 0 80px rgba(34,197,94,.4)}
+.lightbox-content img{max-width:100%;max-height:80vh;object-fit:contain;display:block}
+.lightbox-close{position:absolute;top:14px;right:20px;font-size:2rem;color:#fff;cursor:pointer;z-index:2;line-height:1;transition:all .3s;text-shadow:0 0 20px rgba(0,0,0,.7)}
+.lightbox-close:hover{color:#4ade80;transform:scale(1.15)}
+.lightbox-caption{text-align:center;color:#f0fdf4;font-size:.9rem;padding:12px 20px;background:rgba(0,0,0,.55);font-weight:500}
+
+.reveal{opacity:0;transform:translateY(40px);transition:opacity .8s cubic-bezier(.2,.8,.2,1),transform .8s cubic-bezier(.2,.8,.2,1)}
+.reveal.visible{opacity:1;transform:translateY(0)}
+
+.sevak-memory-pill{display:inline-block;margin-top:8px;padding:5px 9px;border-radius:12px;background:rgba(34,197,94,.12);border:1px solid rgba(74,222,128,.35);font-size:.64rem;letter-spacing:.8px;color:#4ade80;text-transform:uppercase;font-weight:700}
+</style>
+</head>
+<body>
+
+<div class="nature-backdrop" aria-hidden="true"></div>
+<canvas id="particleCanvas"></canvas>
+
+<!-- ═══════ NAVBAR ═══════ -->
+<nav class="navbar" id="navbar">
+  <div class="nav-brand">🌍 WILDLIFE OF THE EARTH</div>
+  <div class="nav-links">
+    <a href="#wheel">Three Pillars</a>
+    <a href="#land">Land</a>
+    <a href="#snow">Snow</a>
+    <a href="#desert">Desert</a>
+    <a href="#grassland">Grassland</a>
+    <a href="#forest">Forest</a>
+    <a href="#water">Water</a>
+    <a href="#air">Air</a>
+  </div>
+  <div class="nav-actions">
+    <button class="nav-brightness" id="brightnessToggle" title="Toggle brightness">☀️</button>
+    <button class="nav-sevak" id="navSevak">🤖 Ask Sevak</button>
+  </div>
+</nav>
+
+<!-- ═══════ HERO ═══════ -->
+<header class="hero">
+  <div class="hero-badge">🌍 The True Nature · The Raw Life · The Wisdom of Survival</div>
+  <h1>WILDLIFE OF THE EARTH <small>(THE TRUE NATURE)</small></h1>
+  <p class="hero-sub">The life of the raw nature — the life which is beyond the experience of humans, human tradition, human technology. The life whose only purpose is to survive. That is the truth of the wildlife of the Earth.</p>
+
+  <div class="hero-icons">
+    <div class="hero-icon-wrap">
+      <img class="hero-icon wiki-img" data-wiki="African elephant in savanna" alt="African Elephant">
+      <span class="ilabel">African Elephant</span>
+    </div>
+    <div class="hero-icon-wrap">
+      <img class="hero-icon wiki-img" data-wiki="Royal Bengal Tiger" alt="Royal Bengal Tiger">
+      <span class="ilabel">Royal Bengal Tiger</span>
+    </div>
+    <div class="hero-icon-wrap">
+      <img class="hero-icon wiki-img" data-wiki="Polar bear on ice" alt="Polar Bear">
+      <span class="ilabel">Polar Bear</span>
+    </div>
+    <div class="hero-icon-wrap">
+      <img class="hero-icon wiki-img" data-wiki="Bald eagle flying" alt="Bald Eagle">
+      <span class="ilabel">Bald Eagle</span>
+    </div>
+  </div>
+
+  <div class="hero-quote" id="heroQuote">🌍 "Wild is the true nature of the Earth — not an abuse, but the raw truth of life."</div>
+  <div class="hero-tags">
+    <span>🦁 Land Wildlife</span>
+    <span>🐋 Aquatic Wildlife</span>
+    <span>🦅 Air Wildlife</span>
+    <span>🌱 The Wisdom of Survival</span>
+  </div>
+  <button class="hero-cta" onclick="document.getElementById('wheel').scrollIntoView({behavior:'smooth'})">
+    Begin the Journey → Three Pillars
+  </button>
+  <div class="hero-scroll">scroll to explore</div>
+</header>
+
+<!-- ═══════ WHEEL — THREE PILLARS ═══════ -->
+<section id="wheel" class="section reveal">
+  <div class="section-head">
+    <span class="section-num">◆ THE THREE PILLARS OF WILDLIFE ◆</span>
+    <h2>The <em>Earth</em> Wheel of Life</h2>
+    <p class="section-sub">Click each door to discover how life survives on the land, in the water, and in the air — the three homes of all wildlife.</p>
+  </div>
+  <div class="wheel-layout">
+    <div class="wheel" id="wheelWheel">
+      <div class="wheel-center">
+        <span class="wc-emoji">🌍</span>
+        <span class="wc-label">WILDLIFE</span>
+      </div>
+      <button class="wheel-node" data-region="land" style="top:2%;left:50%"><span class="dot"></span>Land Wildlife</button>
+      <button class="wheel-node" data-region="water" style="top:50%;left:98%"><span class="dot"></span>Aquatic Wildlife</button>
+      <button class="wheel-node" data-region="air" style="top:98%;left:50%"><span class="dot"></span>Air Wildlife</button>
+      <button class="wheel-node" data-region="forest" style="top:50%;left:2%"><span class="dot"></span>Forest Life</button>
+    </div>
+    <div class="wheel-info" id="wheelInfo">
+      <h3>The Three Pillars</h3>
+      <div class="role">Land · Water · Air — The Whole Wildlife of the Earth</div>
+      <p>The whole wildlife of the Earth is held by <span class="c-grass">land wildlife</span>, <span class="c-ocean">aquatic wildlife</span>, and <span class="c-sky">air wildlife</span>. This project is not Wikipedia knowledge — this is <span class="c-green">wisdom</span> derived from the raw nature of the Earth. Click any door to enter.</p>
+      <div class="pillar-tag">Three Pillars · One Earth</div>
+    </div>
+  </div>
+
+  <div class="quote-rotator reveal" data-quotes="wheelQuotes">
+    <div class="quote-text" id="wheelQuoteText">"Wild is the true nature of the Earth — the raw truth of life."</div>
+    <span class="quote-author" id="wheelQuoteAuthor">— Wildlife of the Earth</span>
+    <div class="quote-dots" id="wheelQuoteDots"></div>
+  </div>
+</section>
+
+<!-- ═══════ THREE PILLARS OVERVIEW ═══════ -->
+<section id="pillars" class="section reveal">
+  <div class="section-head">
+    <span class="section-num">◆ THE FOUNDATION ◆</span>
+    <h2>The Three <em>Homes</em> of Life</h2>
+    <p class="section-sub">Every living creature on the Earth belongs to one of these three homes.</p>
+  </div>
+  <div class="pillar-grid">
+    <div class="pillar-card" onclick="document.getElementById('land').scrollIntoView({behavior:'smooth'})">
+      <div class="pillar-icon">🦁</div>
+      <h3>LAND WILDLIFE</h3>
+      <p>Only 8% of the Earth's land is true wildlife. Snow, desert, grassland, and forest — the four kingdoms of the land.</p>
+      <span class="pillar-sanskrit">Prithvi Jeevan</span>
+    </div>
+    <div class="pillar-card" onclick="document.getElementById('water').scrollIntoView({behavior:'smooth'})">
+      <div class="pillar-icon">🐋</div>
+      <h3>AQUATIC WILDLIFE</h3>
+      <p>Freshwater from mountains and ocean — the source of rivers, and the lifeline of all aquatic creatures and humans.</p>
+      <span class="pillar-sanskrit">Jal Jeevan</span>
+    </div>
+    <div class="pillar-card" onclick="document.getElementById('air').scrollIntoView({behavior:'smooth'})">
+      <div class="pillar-icon">🦅</div>
+      <h3>AIR WILDLIFE</h3>
+      <p>Invisible yet essential — the atmosphere that gives us nitrogen, oxygen, and the birds that ride the wind.</p>
+      <span class="pillar-sanskrit">Vayu Jeevan</span>
+    </div>
+  </div>
+
+  <div class="quote-rotator reveal" data-quotes="pillarQuotes">
+    <div class="quote-text" id="pillarQuoteText">"Three homes, one Earth — land, water, and sky."</div>
+    <span class="quote-author" id="pillarQuoteAuthor">— Wildlife of the Earth</span>
+    <div class="quote-dots" id="pillarQuoteDots"></div>
+  </div>
+</section>
+
+<!-- ═══════ PILLAR 1 — LAND WILDLIFE ═══════ -->
+<section id="land" class="section pillar-section reveal">
+  <div class="pillar-header">
+    <span class="num">◆ PILLAR 01 ◆</span>
+    <h2>Land Wildlife — <em>Prithvi Jeevan</em></h2>
+    <p class="sub">Only 8% of the Earth's land is true wildlife</p>
+  </div>
+
+  <p class="lead">The land wildlife is the wildlife of the <strong>30% of the Earth</strong>. But this is also not the whole truth — because <strong>22% of the land is occupied by humans</strong>, which is not under wildlife. So we have just <strong>8% of the land</strong> for the wildlife of the land — the wild animals, the wild forest, the wild mountain, the wild tree. There are four kingdoms of land wildlife: <strong>snow, desert, grassland, and forest</strong>.</p>
+
+  <div class="wisdom-box reveal">
+    <span class="wlabel">◆ Why the Word "Wild" ◆</span>
+    When we discuss the wild, it does not mean we are abusing. These are the wrong words. Because <strong>wild is the true nature of the Earth</strong>. We have to understand and experience that — because this will give us wisdom and great knowledge for our life, even if we live beyond the wildlife.
+  </div>
+
+  <div class="nature-gallery reveal">
+    <figure><img class="wiki-img" data-wiki="African savanna elephant" alt="African elephant"><figcaption>African Savanna</figcaption></figure>
+    <figure><img class="wiki-img" data-wiki="Amazon rainforest" alt="Amazon rainforest"><figcaption>Amazon Rainforest</figcaption></figure>
+    <figure><img class="wiki-img" data-wiki="Sahara desert" alt="Sahara desert"><figcaption>Sahara Desert</figcaption></figure>
+    <figure><img class="wiki-img" data-wiki="Himalayas snow mountain" alt="Himalayas"><figcaption>Himalayan Snow</figcaption></figure>
+  </div>
+</section>
+
+<!-- ═══════ SUB-PILLAR 1A — SNOW WILDLIFE ═══════ -->
+<section id="snow" class="section pillar-section reveal">
+  <div class="pillar-header">
+    <span class="num">◆ LAND 01 · SNOW ◆</span>
+    <h2>Snow <em>Wildlife</em></h2>
+    <p class="sub">The ancient ice age — the first face of land wildlife</p>
+  </div>
+
+  <p class="lead">At the ancient time — much, much ancient — there was a period when the snow covered more than <strong>90% of the land of the Earth</strong>: the Ice Age. This was truly amazing, and we have a lot of scientific evidence. The animals then were much more different from these times. But today's snow wildlife still carries that ancient spirit — <strong>Antarctica, the Arctic, the Himalayas</strong>. Life survives where even humans cannot.</p>
+
+  <div class="icon-gallery reveal">
+    <figure><img class="wiki-img" data-wiki="Polar bear on ice" alt="Polar bear"><figcaption>Polar Bear</figcaption></figure>
+    <figure><img class="wiki-img" data-wiki="Snow leopard" alt="Snow Leopard"><figcaption>Snow Leopard</figcaption></figure>
+    <figure><img class="wiki-img" data-wiki="Siberian tiger" alt="Siberian Tiger"><figcaption>Siberian Tiger</figcaption></figure>
+  </div>
+
+  <article class="practice reveal">
+    <div class="practice-media">
+      <span class="img-badge">Snow 01 · The King</span>
+      <img class="wiki-img" data-wiki="Polar bear" alt="Polar Bear — King of the Arctic">
+    </div>
+    <div class="practice-body">
+      <h3>Polar Bear <span class="sanskrit">The White Giant · Arctic</span></h3>
+      <p class="desc">The <strong>polar bear</strong> is the great white wanderer of the Arctic. It walks on drifting ice, swims for miles, and waits for seals at breathing holes. Its fur is not white — it is transparent and hollow, made to hold warmth and reflect light. It is the true sovereign of the snow.</p>
+      <ul>
+        <li>Lives on sea ice — hunting seals for survival.</li>
+        <li>Swims for days across open ocean.</li>
+        <li>Two layers of fur plus thick blubber keep it warm in −40°C.</li>
+        <li>Threatened by melting ice — the changing Earth.</li>
+      </ul>
+    </div>
+  </article>
+
+  <article class="practice reverse reveal">
+    <div class="practice-media">
+      <span class="img-badge">Snow 02 · The Ghost</span>
+      <img class="wiki-img" data-wiki="Snow leopard" alt="Snow Leopard — Ghost of the Mountains">
+    </div>
+    <div class="practice-body">
+      <h3>Snow Leopard <span class="sanskrit">The Ghost of the Mountains · Himalaya</span></h3>
+      <p class="desc">The <strong>snow leopard</strong> is called the "ghost of the mountains" — a solitary hunter of the high Himalayas, so silent that even shepherds rarely see it. Its long tail balances it on cliffs; its fur holds warmth; its paws are snowshoes. It is the very spirit of the Indian Himalayan wilderness.</p>
+      <ul>
+        <li>Hunts ibex, blue sheep, and marmots above 3,000 m.</li>
+        <li>Leaps up to 15 metres in a single pounce.</li>
+        <li>A long tail up to 1 metre wraps around it like a blanket.</li>
+        <li>Critically endangered — only a few thousand remain.</li>
+      </ul>
+    </div>
+  </article>
+
+  <article class="practice reveal">
+    <div class="practice-media">
+      <span class="img-badge">Snow 03 · The Stripe</span>
+      <img class="wiki-img" data-wiki="Siberian tiger" alt="Siberian Tiger — The Snow Tiger">
+    </div>
+    <div class="practice-body">
+      <h3>Siberian Tiger <span class="sanskrit">Amur Tiger · Siberia</span></h3>
+      <p class="desc">The <strong>Siberian tiger</strong> is the largest cat on Earth — a hunter of the frozen forests of Russia and China. Its fur is thicker and paler than its Bengal cousin; its body is built for snow. It walks alone through birch forests where wolves fear to pass.</p>
+      <ul>
+        <li>Largest cat — up to 300 kg and 3.5 metres long.</li>
+        <li>Thick fur and a layer of fat survive −30°C winters.</li>
+        <li>Hunts boar, deer, and even small bears.</li>
+        <li>Fewer than 600 remain in the wild — an urgent sacredness.</li>
+      </ul>
+    </div>
+  </article>
+
+  <div class="devotional-banner reveal">
+    <div class="dev-img">
+      <img class="wiki-img" data-wiki="Emperor penguin Antarctica" alt="Emperor Penguins of Antarctica">
+    </div>
+    <div class="dev-copy">
+      <h3>◆ ANTARCTICA · THE ICE KINGDOM ◆</h3>
+      <div class="shloka">"Life endures where even the flame cannot."</div>
+      <p>Antarctica is the coldest, driest, windiest place on Earth. Yet life is there — <strong>Emperor penguins</strong> that stand through blizzards to protect one egg, <strong>Weddell seals</strong> that sing underwater, <strong>krill</strong> so many that they feed the entire ocean. This is the ancient snow wildlife that has never left us. It is the first face of the Earth's raw nature.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ SUB-PILLAR 1B — DESERT WILDLIFE ═══════ -->
+<section id="desert" class="section pillar-section reveal">
+  <div class="pillar-header">
+    <span class="num">◆ LAND 02 · DESERT ◆</span>
+    <h2>Desert <em>Wildlife</em></h2>
+    <p class="sub">Life that survives without water — the courage of the sand</p>
+  </div>
+
+  <p class="lead">The desert is where water vanishes but life does not. From the <strong>Sahara</strong> to the <strong>Kalahari</strong>, from the <strong>Thar</strong> of India to the deserts of Arabia, life has learned the deepest wisdom of survival — to live without water, to walk without shade, to endure without complaint.</p>
+
+  <div class="icon-gallery reveal">
+    <figure><img class="wiki-img" data-wiki="Dromedary camel desert" alt="Camel"><figcaption>Camel · Ship of the Desert</figcaption></figure>
+    <figure><img class="wiki-img" data-wiki="African elephant desert Namibia" alt="Desert Elephant"><figcaption>Desert Elephant</figcaption></figure>
+    <figure><img class="wiki-img" data-wiki="Asiatic lion Gir" alt="Asiatic Lion"><figcaption>Asiatic Lion · Gir</figcaption></figure>
+  </div>
+
+  <article class="practice reveal">
+    <div class="practice-media">
+      <span class="img-badge">Desert 01 · The Ship</span>
+      <img class="wiki-img" data-wiki="Camel desert" alt="Camel — Ship of the Desert">
+    </div>
+    <div class="practice-body">
+      <h3>Camel <span class="sanskrit">The Ship of the Desert · ऊँट</span></h3>
+      <p class="desc">The <strong>camel</strong> is the greatest walking miracle of the desert. Its hump stores fat — not water — which can be converted to energy and moisture. Its eyelashes shield against sand; its nostrils close on demand; its feet are wide pads for sand. It can drink 100 litres in 10 minutes and then walk for days without a sip.</p>
+      <ul>
+        <li>Survives 40°C heat and −20°C cold in the same desert.</li>
+        <li>Three eyelids — the third one is translucent, for sandstorms.</li>
+        <li>Drinks 100+ litres in a single long drink.</li>
+        <li>Walks 40 km/day in the Thar and the Sahara alike.</li>
+      </ul>
+    </div>
+  </article>
+
+  <article class="practice reverse reveal">
+    <div class="practice-media">
+      <span class="img-badge">Desert 02 · The Giant</span>
+      <img class="wiki-img" data-wiki="African bush elephant" alt="African Desert Elephant — Kalahari">
+    </div>
+    <div class="practice-body">
+      <h3>African Elephant <span class="sanskrit">The Desert Wanderer · Kalahari</span></h3>
+      <p class="desc">The African elephant also lives in the <strong>Kalahari Desert</strong> and the Namib — the driest places of Africa. These desert elephants walk for kilometres through sand to find the next riverbed, digging for water with their trunks and remembering paths their grandmothers walked decades earlier.</p>
+      <ul>
+        <li>Largest land mammal on Earth — up to 6,000 kg.</li>
+        <li>Remembers water sources across a lifetime.</li>
+        <li>Digs for water with trunk and tusks — creates wells for all wildlife.</li>
+        <li>Desert elephants walk hundreds of km a year.</li>
+      </ul>
+    </div>
+  </article>
+
+  <article class="practice reveal">
+    <div class="practice-media">
+      <span class="img-badge">Desert 03 · The Pride</span>
+      <img class="wiki-img" data-wiki="Asiatic lion Gir Forest" alt="Asiatic Lion — Gir Forest, India">
+    </div>
+    <div class="practice-body">
+      <h3>Asiatic Lion <span class="sanskrit">Sinh · Gir, Gujarat, India</span></h3>
+      <p class="desc">The <strong>Asiatic lion</strong> lives only in the Gir Forest of Gujarat, India — a semi-arid, dry deciduous region. It is smaller than the African lion, has a shorter mane, and lives in the land that is India's own desert border. It is the lion of the <strong>Sher</strong>, of our ancestors, of our own wildlife.</p>
+      <ul>
+        <li>Only wild population — the Gir Forest of Gujarat.</li>
+        <li>Smaller mane, longer tail tuft than the African lion.</li>
+        <li>Lives in dry, scrub, and semi-arid jungle.</li>
+        <li>Around 700 only — protected with devotion.</li>
+      </ul>
+    </div>
+  </article>
+
+  <div class="wisdom-box reveal">
+    <span class="wlabel">◆ In India — The Desert Wildlife ◆</span>
+    In India, you will see the environment of the <strong>Thar Desert</strong> of Rajasthan, and the <strong>Asiatic Lion</strong> living in the dry regions of Gujarat. The <strong>Great Indian Bustard</strong> — one of the heaviest flying birds — also lives in the desert and is now critically endangered. The desert is not empty — it is full of life that is silently heroic.
+  </div>
+</section>
+
+<!-- ═══════ SUB-PILLAR 1C — GRASSLAND WILDLIFE ═══════ -->
+<section id="grassland" class="section pillar-section reveal">
+  <div class="pillar-header">
+    <span class="num">◆ LAND 03 · GRASSLAND ◆</span>
+    <h2>Grassland <em>Wildlife</em></h2>
+    <p class="sub">The sea of grass — home of the greatest herds on Earth</p>
+  </div>
+
+  <p class="lead">When we discuss the <strong>grassland</strong>, there are many countries that are grasslands — the <strong>USA, Africa, India, Alaska, South America</strong>. There are many animals that live in the grasslands — the <strong>African lion, hyena, leopard</strong>. In the American grassland you will see the <strong>Grizzly Bear</strong> and the <strong>Kodiak Bear</strong>. In the grassland you will see the <strong>African buffalo, giraffe, and the African bush elephant</strong> — the world's largest land mammal.</p>
+
+  <div class="icon-gallery reveal">
+    <figure><img class="wiki-img" data-wiki="African bush elephant savanna" alt="African bush elephant"><figcaption>African Bush Elephant</figcaption></figure>
+    <figure><img class="wiki-img" data-wiki="Giraffe savanna" alt="Giraffe"><figcaption>Giraffe</figcaption></figure>
+    <figure><img class="wiki-img" data-wiki="African lion male" alt="African Lion"><figcaption>African Lion</figcaption></figure>
+  </div>
+
+  <article class="practice reveal">
+    <div class="practice-media">
+      <span class="img-badge">Grassland 01 · The King</span>
+      <img class="wiki-img" data-wiki="African lion pride" alt="African Lion">
+    </div>
+    <div class="practice-body">
+      <h3>African Lion <span class="sanskrit">The King of the Grassland · सिंह</span></h3>
+      <p class="desc">The <strong>African lion</strong> is the true sovereign of the grassland. It hunts in prides — the only big cat that lives in family groups. The male guards territory with a roar that carries 8 kilometres; the lionesses do most of the hunting, working as a team of silent shadows.</p>
+      <ul>
+        <li>Lives in prides of up to 30 lions.</li>
+        <li>Roar heard up to 8 km away.</li>
+        <li>Lionesses hunt together — teamwork of survival.</li>
+        <li>The last true king of the African savanna.</li>
+      </ul>
+    </div>
+  </article>
+
+  <article class="practice reverse reveal">
+    <div class="practice-media">
+      <span class="img-badge">Grassland 02 · The Tower</span>
+      <img class="wiki-img" data-wiki="Giraffe" alt="Giraffe — World's Tallest Animal">
+    </div>
+    <div class="practice-body">
+      <h3>Giraffe <span class="sanskrit">The Tall Wanderer · जिराफ़</span></h3>
+      <p class="desc">The <strong>giraffe</strong> is the tallest land animal on Earth — up to 5.5 metres. Its long neck reaches acacia leaves no other animal can eat. Its tongue is 45 cm long and bluish-purple to protect it from the sun. Its heart weighs 11 kg — the most powerful heart of any land animal, to pump blood up that tower.</p>
+      <ul>
+        <li>Tallest land animal — up to 5.5 m.</li>
+        <li>Sleeps standing up, only 20 minutes to 2 hours a day.</li>
+        <li>Heart weighs 11 kg — pumps blood 2 metres upward.</li>
+        <li>Spotted pattern is unique — like a fingerprint.</li>
+      </ul>
+    </div>
+  </article>
+
+  <article class="practice reveal">
+    <div class="practice-media">
+      <span class="img-badge">Grassland 03 · The Giant</span>
+      <img class="wiki-img" data-wiki="African bush elephant" alt="African Bush Elephant — World's Largest Land Mammal">
+    </div>
+    <div class="practice-body">
+      <h3>African Bush Elephant <span class="sanskrit">The Largest Land Mammal · हाथी</span></h3>
+      <p class="desc">The <strong>African bush elephant</strong> is the world's largest land mammal — up to 6,000 kg and 4 metres tall. It is a gardener of the savanna: it knocks down trees to open grassland, spreads seeds in its dung, and digs water holes that all other animals drink from. When elephants go, the whole savanna suffers.</p>
+      <ul>
+        <li>Largest land mammal — up to 6,000 kg.</li>
+        <li>Trunk has 40,000 muscles — can lift 300 kg.</li>
+        <li>Eats 150 kg of plants and drinks 200 litres a day.</li>
+        <li>Remembers water sources across decades.</li>
+      </ul>
+    </div>
+  </article>
+
+  <article class="practice reverse reveal">
+    <div class="practice-media">
+      <span class="img-badge">Grassland 04 · American</span>
+      <img class="wiki-img" data-wiki="Grizzly bear" alt="Grizzly Bear — American Grassland">
+    </div>
+    <div class="practice-body">
+      <h3>Grizzly Bear & Kodiak Bear <span class="sanskrit">American Giants · Alaska</span></h3>
+      <p class="desc">In the <strong>American grassland</strong> and the wild of Alaska, you will see the <strong>Grizzly Bear</strong> — and its giant cousin the <strong>Kodiak Bear</strong>, the largest brown bear on Earth. They fish in rivers for salmon, walk the tundra, and sleep through winter in dens they dug themselves. They are the shadow of North America.</p>
+      <ul>
+        <li>Kodiak — largest brown bear — up to 700 kg.</li>
+        <li>Grizzly — claws 10 cm long, can run 55 km/h.</li>
+        <li>Sleeps through winter — the deep rest of the wild.</li>
+        <li>The great western bear of American wilderness.</li>
+      </ul>
+    </div>
+  </article>
+
+  <div class="wisdom-box reveal">
+    <span class="wlabel">◆ The Other Grassland Kings ◆</span>
+    In the grassland of Africa, you will also see the <strong>African buffalo</strong> — one of the "Big Five," known for its unpredictable strength — and the <strong>hyena</strong>, the greatest scavenger-hunter of the savanna, with jaws strong enough to crack bone. And the <strong>leopard</strong>, who drags its prey up a tree to keep it from the lions. Every one of them is a lesson in survival.
+  </div>
+</section>
+
+<!-- ═══════ SUB-PILLAR 1D — FOREST / RAINFOREST ═══════ -->
+<section id="forest" class="section pillar-section reveal">
+  <div class="pillar-header">
+    <span class="num">◆ LAND 04 · FOREST ◆</span>
+    <h2>Tropical <em>Rainforest</em></h2>
+    <p class="sub">The spirit of the jungle — Amazon and India</p>
+  </div>
+
+  <p class="lead">Now we discuss the <strong>rainforest, tropical rainforest</strong>. In the America you will see the <strong>Amazon</strong> — and there you will see the <strong>Jaguar</strong>, which is the spirit of the jungle. And in the <strong>Indian jungles</strong> you will see the <strong>Royal Bengal Tiger</strong>, which is the spirit of the Indian jungle.</p>
+
+  <div class="icon-gallery reveal">
+    <figure><img class="wiki-img" data-wiki="Jaguar Pantanal" alt="Jaguar"><figcaption>Jaguar · Amazon</figcaption></figure>
+    <figure><img class="wiki-img" data-wiki="Royal Bengal Tiger" alt="Bengal Tiger"><figcaption>Royal Bengal Tiger</figcaption></figure>
+    <figure><img class="wiki-img" data-wiki="Orangutan Borneo" alt="Orangutan"><figcaption>Orangutan · Borneo</figcaption></figure>
+  </div>
+
+  <article class="practice reveal">
+    <div class="practice-media">
+      <span class="img-badge">Forest 01 · Spirit of Amazon</span>
+      <img class="wiki-img" data-wiki="Jaguar" alt="Jaguar — Spirit of the Amazon">
+    </div>
+    <div class="practice-body">
+      <h3>Jaguar <span class="sanskrit">The Spirit of the Jungle · Amazon</span></h3>
+      <p class="desc">The <strong>jaguar</strong> is the spirit of the Amazon jungle. It is the only big cat that kills with a bite to the skull — piercing the brain directly. Its name means "he who kills in one leap." It swims, it climbs, it hunts caiman in rivers. Its rosettes — those dark circles with dots inside — are the signature of the Amazon's soul.</p>
+      <ul>
+        <li>Third-largest cat — after lion and tiger.</li>
+        <li>Only big cat that kills by piercing the skull.</li>
+        <li>Swims rivers and hunts caiman — the crocodile's cousin.</li>
+        <li>Roars across the flooded forest of the Amazon.</li>
+      </ul>
+    </div>
+  </article>
+
+  <article class="practice reverse reveal">
+    <div class="practice-media">
+      <span class="img-badge">Forest 02 · Spirit of India</span>
+      <img class="wiki-img" data-wiki="Royal Bengal tiger" alt="Royal Bengal Tiger — Spirit of the Indian Jungle">
+    </div>
+    <div class="practice-body">
+      <h3>Royal Bengal Tiger <span class="sanskrit">Spirit of the Indian Jungle · बाघ</span></h3>
+      <p class="desc">The <strong>Royal Bengal Tiger</strong> is the spirit of the Indian jungle. It is India's national animal, the sovereign of the Sundarbans, the Ranthambore, the Kanha, the Jim Corbett. It hunts alone in silence; it swims rivers; it holds territories of 100 square kilometres. Its roar is the deepest song of the Indian wilderness.</p>
+      <ul>
+        <li>National animal of India — the Sher of our soil.</li>
+        <li>Hunts alone — one silent hunter per 100 sq km.</li>
+        <li>Swims in rivers and even in the Sundarbans mangroves.</li>
+        <li>India still holds 75% of the world's wild tigers.</li>
+      </ul>
+    </div>
+  </article>
+
+  <div class="devotional-banner reveal">
+    <div class="dev-img">
+      <img class="wiki-img" data-wiki="Amazon rainforest" alt="Amazon Rainforest — Lungs of the Earth">
+    </div>
+    <div class="dev-copy">
+      <h3>◆ THE FOREST · LUNGS OF THE EARTH ◆</h3>
+      <div class="shloka">"The jungle is not a place — it is the breath of the Earth."</div>
+      <p>The forest is the mother of life. The <strong>Amazon</strong> produces 20% of the oxygen we breathe — it is the lungs of the Earth. The <strong>Indian jungles</strong> are the home of the Royal Bengal Tiger, the Asiatic Elephant, the Indian Leopard, the Indian Rhino, the Sloth Bear, the Wild Dog. When the forest dies, the Earth's breath becomes shallow. <strong>So the forest must be protected as the lungs of our own body.</strong></p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ PILLAR 2 — AQUATIC / WATER WILDLIFE ═══════ -->
+<section id="water" class="section pillar-section reveal">
+  <div class="pillar-header">
+    <span class="num">◆ PILLAR 02 ◆</span>
+    <h2>Aquatic Wildlife — <em>Jal Jeevan</em></h2>
+    <p class="sub">The 50% contribution of the mountains and the ocean</p>
+  </div>
+
+  <p class="lead">Fifty percent of the contribution of the <strong>mountains and the ocean</strong> — because of the ocean there is rain, and because of the mountains there is glacier. Because of this, they give shape to the <strong>freshwater</strong> rivers. There are many lakes on the Earth — and they too are part of the freshwater. There is also salt water lakes, but we are discussing freshwater. Because of the freshwater — because of the river — there is <strong>aquatic life</strong>. And not only aquatic life — but also the <strong>migratory birds</strong> who live there, and the <strong>human lifeline</strong> — because the river water is the source of agriculture and human life itself.</p>
+
+  <div class="wisdom-box reveal">
+    <span class="wlabel">◆ The Sacred Ganga and Yamuna ◆</span>
+    In India, the <strong>Ganga</strong> and the <strong>Yamuna</strong> are not just rivers — they are mothers. They flow from the Himalayas, they carry the grace of the mountains, and they feed the plains of Punjab, Uttar Pradesh, and Bihar — the most fertile lands of the world. The river is the source of the wheat, the rice, the sugarcane. Without the river there is no farm. Without the farm there is no food. <strong>Without the food there is no human.</strong> This is the simple truth — there is no rocket science.
+  </div>
+
+  <div class="icon-gallery reveal">
+    <figure><img class="wiki-img" data-wiki="Ganges river" alt="Ganga"><figcaption>Ganga · The Mother</figcaption></figure>
+    <figure><img class="wiki-img" data-wiki="Yamuna river" alt="Yamuna"><figcaption>Yamuna · The Sister</figcaption></figure>
+    <figure><img class="wiki-img" data-wiki="Lake freshwater" alt="Freshwater Lake"><figcaption>Freshwater Lake</figcaption></figure>
+  </div>
+
+  <article class="practice reveal">
+    <div class="practice-media">
+      <span class="img-badge">Water 01 · The Fisher</span>
+      <img class="wiki-img" data-wiki="Gharial crocodile" alt="Gharial — Indian River Crocodile">
+    </div>
+    <div class="practice-body">
+      <h3>Gharial & Crocodiles <span class="sanskrit">The Ancient River Kings · मगरमच्छ</span></h3>
+      <p class="desc">The <strong>gharial</strong> is the most ancient of India's river creatures — a fish-eating crocodile with a long, narrow snout, uniquely designed for the flowing water of the Ganga and Chambal. Crocodiles in general are the oldest survivors of the river — unchanged for 200 million years. They are the guardians of the freshwater world.</p>
+      <ul>
+        <li>Gharial — critically endangered — only ~650 remain.</li>
+        <li>Crocodiles — unchanged for 200 million years.</li>
+        <li>Mothers guard nests and carry hatchlings in their jaws.</li>
+        <li>Kept the rivers clean for aeons before humans.</li>
+      </ul>
+    </div>
+  </article>
+
+  <article class="practice reverse reveal">
+    <div class="practice-media">
+      <span class="img-badge">Water 02 · The River Dolphin</span>
+      <img class="wiki-img" data-wiki="Ganges river dolphin" alt="Ganges River Dolphin">
+    </div>
+    <div class="practice-body">
+      <h3>Ganges River Dolphin <span class="sanskrit">The Blind Swimmer · गंगा डॉल्फिन</span></h3>
+      <p class="desc">The <strong>Ganges river dolphin</strong> is nearly blind — it sees the world through sound. It swims the Ganga, Brahmaputra, and Meghna rivers, singing and listening, guiding itself through the dark water by echoes. It is India's <strong>national aquatic animal</strong>. When the river dies, the dolphin dies first — because it lives only in the living water.</p>
+      <ul>
+        <li>India's national aquatic animal.</li>
+        <li>Nearly blind — sees with ultrasonic sound.</li>
+        <li>Lives only in freshwater — never in the sea.</li>
+        <li>Only ~4,000 remain — the river's sacred daughter.</li>
+      </ul>
+    </div>
+  </article>
+
+  <article class="practice reveal">
+    <div class="practice-media">
+      <span class="img-badge">Water 03 · The Hippo</span>
+      <img class="wiki-img" data-wiki="Hippopotamus river" alt="Hippopotamus — The River King of Africa">
+    </div>
+    <div class="practice-body">
+      <h3>Hippopotamus <span class="sanskrit">The River Horse · Africa</span></h3>
+      <p class="desc">The <strong>hippopotamus</strong> lives in the rivers and lakes of Africa. Its name means "river horse" in Greek, but it is more closely related to whales. It can hold its breath for 5 minutes underwater. It walks the river bottom like a ballet dancer of 1,500 kg. It is the great river king of Africa — and without freshwater, it cannot survive.</p>
+      <ul>
+        <li>Holds breath up to 5 minutes underwater.</li>
+        <li>Walks and runs along the river bottom.</li>
+        <li>Secretes a red "sunscreen" to protect its skin.</li>
+        <li>Kills more humans than any other African mammal — protect its water.</li>
+      </ul>
+    </div>
+  </article>
+
+  <article class="practice reverse reveal">
+    <div class="practice-media">
+      <span class="img-badge">Water 04 · The Leaper</span>
+      <img class="wiki-img" data-wiki="Ganges river dolphin" alt="Freshwater fish — Mahseer">
+    </div>
+    <div class="practice-body">
+      <h3>Fish, Mahseer & the Silent River <span class="sanskrit">The Life of Freshwater</span></h3>
+      <p class="desc">The rivers carry thousands of species of fish. The <strong>Golden Mahseer</strong> of the Himalayan rivers is one of the world's largest freshwater fish — up to 2.5 metres. The rivers are also home to otters, turtles, freshwater crabs, and countless small creatures. <strong>Every drop of the river is alive.</strong></p>
+      <ul>
+        <li>Golden Mahseer — up to 2.5 metres — the sacred river fish.</li>
+        <li>Otters — playful hunters of the Himalayan rivers.</li>
+        <li>Turtles — ancient travellers of both water and land.</li>
+        <li>Every river species depends on the river's health.</li>
+      </ul>
+    </div>
+  </article>
+
+  <div class="wisdom-box reveal">
+    <span class="wlabel">◆ Our Responsibility to the Rivers ◆</span>
+    The freshwater is the source of agriculture — because of the freshwater, the lands are fertile for the farm, for the field. If a region has many rivers, its land must be fertile — as Punjab, Uttar Pradesh, and Bihar in India are the most fertile because of many rivers. <strong>That is why the human lifeline is also the river. And what are we doing? We are spoiling our rivers — our determination must be to maintain the beauty of our rivers, not to spoil, destroy, or disturb them.</strong><br><br>
+    If we cannot give the beauty to our river, then we do not have any right — we do not have any right to spoil our river — because we are snatching the life of the aquatic creature. The river is not ours to spoil. The river belongs to the fish, the dolphin, the crocodile, the gharial, the turtle — and only then to us.
+  </div>
+
+  <div class="devotional-banner reveal">
+    <div class="dev-img">
+      <img class="wiki-img" data-wiki="Ganges river Varanasi" alt="Ganga at Varanasi">
+    </div>
+    <div class="dev-copy">
+      <h3>◆ GANGA · THE MOTHER OF RIVERS ◆</h3>
+      <div class="shloka">"Ganga is not a river — Ganga is a living mother."</div>
+      <p>The <strong>Ganga</strong> flows 2,525 kilometres from the Gangotri Glacier in the Himalayas to the Bay of Bengal. She carries the grace of the mountains, feeds the plains, and holds a spiritual place in the heart of India that no other river in the world holds. The Ganga, the Yamuna, the Brahmaputra, the Godavari, the Narmada, the Krishna, the Kaveri — <strong>these are not rivers. These are the mothers of the Earth.</strong></p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ PILLAR 3 — AIR WILDLIFE ═══════ -->
+<section id="air" class="section pillar-section reveal">
+  <div class="pillar-header">
+    <span class="num">◆ PILLAR 03 ◆</span>
+    <h2>Air Wildlife — <em>Vayu Jeevan</em></h2>
+    <p class="sub">The invisible element — the most unique beauty of all</p>
+  </div>
+
+  <p class="lead">Now the time for the <strong>air wildlife</strong>. Because of the atmosphere, because of the most important — the air. Because of this, if this will not happen, then we cannot survive even for seconds. That is the most important because air contains <strong>nitrogen, oxygen, and many gases</strong> which are essential for life. But the wisdom of the air is most unique — because the air is <strong>not visible, but we can feel it</strong>. That is her beauty. We can experience it. Because of this, we are surviving. Because of this, life on the Earth survives. That is the beauty of the air.</p>
+
+  <div class="icon-gallery reveal">
+    <figure><img class="wiki-img" data-wiki="Bald eagle flying" alt="Eagle"><figcaption>Eagle · King of the Sky</figcaption></figure>
+    <figure><img class="wiki-img" data-wiki="Owl flying" alt="Owl"><figcaption>Owl · Night Hunter</figcaption></figure>
+    <figure><img class="wiki-img" data-wiki="Vulture flying" alt="Vulture"><figcaption>Vulture · The Purifier</figcaption></figure>
+  </div>
+
+  <article class="practice reveal">
+    <div class="practice-media">
+      <span class="img-badge">Air 01 · The Hunter of the Sky</span>
+      <img class="wiki-img" data-wiki="Bald eagle" alt="Bald Eagle — The Sky Hunter">
+    </div>
+    <div class="practice-body">
+      <h3>Eagle <span class="sanskrit">The King of the Sky · चील / गरुड़</span></h3>
+      <p class="desc">The <strong>eagle</strong> is the king of the sky. Its eyesight is 4–8 times sharper than a human's — it can see a rabbit from 3 kilometres away. It dives at 320 km/h. Its wings carry it to 3,000 metres above the Earth. In India, the eagle is <strong>Garuda</strong> — the vehicle of Lord Vishnu, the symbol of divine vision.</p>
+      <ul>
+        <li>Vision 4–8× sharper than human — sees prey from 3 km.</li>
+        <li>Dives at 320 km/h — fastest of all birds.</li>
+        <li>Lives 20–30 years — some up to 50.</li>
+        <li>Garuda of Hindu tradition — the sacred sky-hunter.</li>
+      </ul>
+    </div>
+  </article>
+
+  <article class="practice reverse reveal">
+    <div class="practice-media">
+      <span class="img-badge">Air 02 · The Night Hunter</span>
+      <img class="wiki-img" data-wiki="Owl night" alt="Owl — The Silent Hunter of the Night">
+    </div>
+    <div class="practice-body">
+      <h3>Owl <span class="sanskrit">The Silent Hunter · उल्लू</span></h3>
+      <p class="desc">The <strong>owl</strong> is the silent hunter of the night. Its wings have fringed edges that break the sound of air — so it flies in total silence. Its head rotates 270°. Its hearing is so precise that it can catch a mouse under 30 cm of snow. In India, the owl is the vehicle of <strong>Maa Lakshmi</strong> — the witness of wisdom.</p>
+      <ul>
+        <li>Flies in total silence — fringed feathers kill the sound.</li>
+        <li>Head rotates 270° — no eyeballs, only eye tubes.</li>
+        <li>Hunts mice and rats — the farmer's friend.</li>
+        <li>Associated with Maa Lakshmi — the owl of wisdom.</li>
+      </ul>
+    </div>
+  </article>
+
+  <article class="practice reveal">
+    <div class="practice-media">
+      <span class="img-badge">Air 03 · The Purifier</span>
+      <img class="wiki-img" data-wiki="Vulture soaring" alt="Vulture — The Sacred Scavenger">
+    </div>
+    <div class="practice-body">
+      <h3>Vulture — The Most Important <span class="sanskrit">Scavenger · गिद्ध</span></h3>
+      <p class="desc">The <strong>vulture</strong> is the most important bird for our environment that many people do not realise. Actually, the vulture kills the vanished — kills the diseases. It eats the dead animals that would otherwise spread <strong>rabies, anthrax, and other diseases</strong>. In ancient India, Parsis placed their dead for vultures to purify. The vulture is not a dirty bird — the vulture is a <strong>sacred purifier</strong>. Without vultures, disease spreads.</p>
+      <ul>
+        <li>Eats dead animals — stops rabies and anthrax spread.</li>
+        <li>Stomach acid pH 1 — kills almost all bacteria.</li>
+        <li>Soars on thermals for hours without flapping.</li>
+        <li>Vultures in India fell 99% due to a drug — a tragedy.</li>
+      </ul>
+    </div>
+  </article>
+
+  <article class="practice reverse reveal">
+    <div class="practice-media">
+      <span class="img-badge">Air 04 · The Song</span>
+      <img class="wiki-img" data-wiki="Hummingbird flying" alt="Hummingbird — The Jewel of the Air">
+    </div>
+    <div class="practice-body">
+      <h3>All Birds — Carnivore & Herbivore <span class="sanskrit">The Whole Family of the Air</span></h3>
+      <p class="desc">There are lots of creatures in the air — from the <strong>carnivore to the herbivore</strong>. Carnivores like the big <strong>eagles</strong>, the <strong>owls</strong>, the <strong>falcons</strong>, the <strong>kites</strong>. Herbivores like the <strong>parrots, sparrows, pigeons, hummingbirds</strong>. And the scavengers like the <strong>vultures, crows, kites</strong>. Each one is essential. The parrot scatters seeds; the hummingbird pollinates; the owl hunts rodents; the vulture purifies. <strong>The sky is not empty — the sky is a whole city of life.</strong></p>
+      <ul>
+        <li>Parrots, sparrows, pigeons — the seed-spreaders.</li>
+        <li>Hummingbirds — the smallest birds, the jewel flyers.</li>
+        <li>Falcons — the fastest animals on Earth — 380 km/h.</li>
+        <li>Migratory birds — the travellers who cross continents.</li>
+      </ul>
+    </div>
+  </article>
+
+  <div class="wisdom-box reveal">
+    <span class="wlabel">◆ What Is Happening in Our Cities ◆</span>
+    But what is happening in the cities, in the towns — we are not even seeing the sparrows, the small birds. They are dying from our <strong>pollution, air pollution</strong>. Because of human ego, because of human destructive mind — the ugly mind — the birds are no longer there. This is a very sorrowful experience for us. The sparrow was once the most common bird of every Indian home — now it is vanishing.<br><br>
+    <strong>The birds are also the part of the Earth like us. We humans do not have any right to vanish their life, to kill their life.</strong>
+  </div>
+
+  <div class="devotional-banner reveal">
+    <div class="dev-img">
+      <img class="wiki-img" data-wiki="Migratory birds flock" alt="Migratory Birds">
+    </div>
+    <div class="dev-copy">
+      <h3>◆ THE BLESSING OF THE AIR ◆</h3>
+      <div class="shloka">"Air is invisible — yet air is our every second."</div>
+      <p>We have the blessing of the <strong>air, the mountains, the rain, the ocean, and the greenery</strong> — that is why our life is possible on the Earth. The wildlife is possible on the Earth. This is the biggest wisdom of the natural beauties and nature. There are lots of birds which are very essential for our life — their existence is our life. <strong>So be careful. Be aware. This experience is most precious.</strong></p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ DETERMINATION ═══════ -->
+<section id="determination" class="section pillar-section reveal">
+  <div class="pillar-header">
+    <span class="num">◆ OUR DETERMINATION ◆</span>
+    <h2>We Will Protect the <em>Wildlife</em> of the Earth</h2>
+    <p class="sub">The beauty of the wildlife is the beauty of our own soul</p>
+  </div>
+
+  <div class="wisdom-box reveal">
+    <span class="wlabel">◆ The Determination ◆</span>
+    Now our determination — our determination is to <strong>connect with the natural wildlife of the Earth</strong>. When we connect with our natural wildlife, then we will understand and experience why they are so important for us — how they give us our life, our purpose of life, our existence of life. <strong>We have to maintain the beauty of our wildlife</strong> — because their life is for us. Their beauty is our blessing. We are the component of the natural wildlife — not totally separated from them — but our soul, our bloodline, is always dedicated toward the wildlife of nature.
+  </div>
+
+  <div class="determination-box reveal">
+    <span class="det-tag">◆ Our Pledge to the Wild ◆</span>
+    <h3>We Will Protect the Beauty of the Wild</h3>
+
+    <div class="det-earth" aria-hidden="true">
+      <img class="wiki-img" data-wiki="Earth from space" alt="Planet Earth — Our beautiful home">
+    </div>
+
+    <div class="det-carousel">
+      <button class="det-nav det-prev" id="detPrev" aria-label="Previous determination">❮</button>
+      <p id="determinationQuote"></p>
+      <button class="det-nav det-next" id="detNext" aria-label="Next determination">❯</button>
+    </div>
+
+    <div class="det-dots" id="detDots" role="tablist" aria-label="Determination slides"></div>
+  </div>
+</section>
+
+<!-- ═══════ FOOTER ═══════ -->
+<footer>
+  <div class="foot-brand">🌍 WILDLIFE OF THE EARTH</div>
+  <div class="foot-tag">The true nature · The wisdom of survival · The beauty of the raw Earth</div>
+  <div class="foot-links">
+    <a href="#wheel">Three Pillars</a>
+    <a href="#land">Land</a>
+    <a href="#snow">Snow</a>
+    <a href="#desert">Desert</a>
+    <a href="#grassland">Grassland</a>
+    <a href="#forest">Forest</a>
+    <a href="#water">Water</a>
+    <a href="#air">Air</a>
+    <a href="#determination">Determination</a>
+  </div>
+  <div class="foot-credit">
+    Guided by the wisdom of raw nature and the true wildlife of the Earth. Powered by <strong>SEVAK IVA</strong> — the Intelligent Voice Assistant. Created by <strong>Ayush Kumar Jha</strong>. 🙏 <strong>Jai Shree Ram.</strong>
+  </div>
+</footer>
+
+<!-- ═══════ SEVAK ORB ═══════ -->
+<div class="sevak-orb" id="sevakOrb" title="Ask SEVAK">
+  <span>🤖</span>
+  <span class="sevak-badge" id="sevakBadge">1</span>
+</div>
+
+<!-- ═══════ SEVAK PANEL ═══════ -->
+<div class="sevak-panel" id="sevakPanel">
+  <div class="sevak-header">
+    <div class="sevak-brand">
+      <span class="sevak-emoji">🌍</span>
+      <span>SEVAK</span>
+    </div>
+    <div class="sevak-actions">
+      <span class="sevak-status" id="sevakStatus"><span class="dot"></span><span id="sevakStatusText">Ready</span></span>
+      <button class="sevak-btn" id="sevakExpand" title="Full page answer">⛶</button>
+      <button class="sevak-btn" id="sevakClose" title="Close">✕</button>
+    </div>
+  </div>
+  <div class="sevak-messages" id="sevakMessages"></div>
+  <div class="sevak-input">
+    <button class="sevak-mic" id="sevakMic" title="Voice input">🎤</button>
+    <input type="text" id="sevakInput" placeholder="Ask Sevak about wildlife, snow, desert, water, air..." autocomplete="off">
+    <button class="sevak-send" id="sevakSend" title="Send">➤</button>
+  </div>
+</div>
+
+<!-- ═══════ FULLPAGE OVERLAY ═══════ -->
+<div class="fullpage-overlay" id="fullpageOverlay">
+  <div class="fullpage-header">
+    <div class="fullpage-brand">🌍 <span>SEVAK</span></div>
+    <div class="fullpage-actions">
+      <button class="fp-btn" id="fullpageSpeakBtn" title="Replay answer">🔊</button>
+      <button class="fp-btn" id="fullpageCopyBtn" title="Copy answer">📋</button>
+      <button class="fp-btn" id="fullpageCloseBtn" title="Close (Esc)">✕</button>
+    </div>
+  </div>
+  <div class="fullpage-scroll" id="fullpageScroll">
+    <div class="fullpage-inner">
+      <div class="fullpage-question" id="fullpageQuestion"></div>
+      <div class="fullpage-answer" id="fullpageAnswer"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ LIGHTBOX ═══════ -->
+<div class="lightbox" id="lightboxOverlay">
+  <div class="lightbox-content">
+    <span class="lightbox-close" id="lightboxClose">✕</span>
+    <img id="lightboxImage" src="" alt="Full size">
+    <div class="lightbox-caption" id="lightboxCaption"></div>
+  </div>
+</div>
+
+<script>
+(function(){
+'use strict';
+
+/* ═══════ BRIGHTNESS ═══════ */
+const brightnessToggle = document.getElementById('brightnessToggle');
+function initBrightness(){
+  const saved = localStorage.getItem('wle-bright-mode');
+  if(saved === 'true'){ document.body.classList.add('bright-mode'); brightnessToggle.textContent='🌙'; brightnessToggle.classList.add('active'); }
+  brightnessToggle.addEventListener('click', ()=>{
+    document.body.classList.toggle('bright-mode');
+    const isBright = document.body.classList.contains('bright-mode');
+    brightnessToggle.textContent = isBright ? '🌙' : '☀️';
+    brightnessToggle.classList.toggle('active', isBright);
+    localStorage.setItem('wle-bright-mode', isBright);
+  });
+}
+
+/* ═══════ QUOTES ═══════ */
+const QUOTE_LIBRARY = {
+  heroQuotes: [
+    {text:'🌍 "Wild is the true nature of the Earth — not an abuse, but the raw truth of life."', author:'— Wildlife of the Earth'},
+    {text:'🌍 "The life which has only purpose to survive — that is the wildlife."', author:'— Wildlife of the Earth'},
+    {text:'🌍 "The life which is beyond the experience of humans — that is the wild."', author:'— Wildlife of the Earth'},
+    {text:'🌍 "Their beauty is our blessing. We are the component of the natural wildlife."', author:'— Wildlife of the Earth'},
+    {text:'🌍 "To connect with wildlife is to remember who we truly are."', author:'— Wildlife of the Earth'}
+  ],
+  wheelQuotes: [
+    {text:'"Land · Water · Air — three homes, one Earth."', author:'— Wildlife of the Earth'},
+    {text:'"The whole wildlife of the Earth is held by the three pillars."', author:'— Wildlife of the Earth'},
+    {text:'"Wild is the true nature of the Earth — the raw truth of life."', author:'— Wildlife of the Earth'}
+  ],
+  pillarQuotes: [
+    {text:'"Three homes, one Earth — land, water, and sky."', author:'— Wildlife of the Earth'},
+    {text:'"Only 8% of the land is true wildlife — the rest we took."', author:'— Wildlife of the Earth'},
+    {text:'"The river is the lifeline of the human — and of the dolphin."', author:'— Wildlife of the Earth'},
+    {text:'"Air is invisible — yet air is our every second."', author:'— Wildlife of the Earth'}
+  ],
+  waterQuotes: [
+    {text:'"The river is not ours to spoil."', author:'— Wildlife of the Earth'},
+    {text:'"If we cannot give beauty to the river, we have no right to spoil it."', author:'— Wildlife of the Earth'},
+    {text:'"Ganga is not a river — Ganga is a living mother."', author:'— Wildlife of the Earth'},
+    {text:'"Because of the freshwater, there is aquatic life — and there is human life."', author:'— Wildlife of the Earth'}
+  ],
+  airQuotes: [
+    {text:'"The birds are also the part of the Earth like us."', author:'— Wildlife of the Earth'},
+    {text:'"The vulture is not a dirty bird — the vulture is a sacred purifier."', author:'— Wildlife of the Earth'},
+    {text:'"Air is invisible, but we can feel it — that is her beauty."', author:'— Wildlife of the Earth'},
+    {text:'"The sky is not empty — the sky is a whole city of life."', author:'— Wildlife of the Earth'}
+  ],
+  determinationQuotes: [
+    {text:'"We have to maintain the beauty of our wildlife — their life is for us."', author:'— Wildlife of the Earth'},
+    {text:'"We are the component of the natural wildlife — not separate from them."', author:'— Wildlife of the Earth'},
+    {text:'"Our soul, our bloodline, is always dedicated toward the wildlife of nature."', author:'— Wildlife of the Earth'},
+    {text:'"When we connect with wildlife, we understand why they are so important."', author:'— Wildlife of the Earth'}
+  ]
+};
+
+function buildQuoteRotator(key, textEl, authorEl, dotsEl, intervalMs){
+  const quotes = QUOTE_LIBRARY[key];
+  if(!quotes || !textEl || !authorEl) return;
+  let idx = 0;
+  if(dotsEl){
+    dotsEl.innerHTML = '';
+    quotes.forEach((_, i)=>{
+      const dot = document.createElement('span');
+      if(i === 0) dot.classList.add('active');
+      dot.addEventListener('click', ()=>{ idx = i; render(); resetInterval(); });
+      dotsEl.appendChild(dot);
+    });
+  }
+  function render(){
+    const q = quotes[idx];
+    textEl.style.opacity = '0'; authorEl.style.opacity = '0';
+    setTimeout(()=>{
+      textEl.textContent = q.text; authorEl.textContent = q.author;
+      textEl.style.opacity = '1'; authorEl.style.opacity = '1';
+    }, 200);
+    if(dotsEl){ [...dotsEl.children].forEach((d, i)=>{ d.classList.toggle('active', i === idx); }); }
+  }
+  function next(){ idx = (idx + 1) % quotes.length; render(); }
+  let timer = setInterval(next, intervalMs);
+  function resetInterval(){ clearInterval(timer); timer = setInterval(next, intervalMs); }
+}
+
+/* ═══════ DETERMINATIONS ═══════ */
+const DETERMINATIONS = [
+  `We are the <strong>component of the natural wildlife</strong>.<br>
+   Their life is for us.<br>
+   Their beauty is our blessing.<br>
+   Our soul, our bloodline, is always dedicated<br>
+   toward the wildlife of nature.<br>
+   <strong>We will maintain the beauty of our wildlife.</strong>`,
+
+  `We will <strong>love the snow wildlife</strong> —<br>
+   the polar bear, the snow leopard, the Siberian tiger.<br>
+   We will <strong>love the desert wildlife</strong> —<br>
+   the camel, the desert elephant, the Asiatic lion.<br>
+   We will <strong>love the grassland wildlife</strong> —<br>
+   the lion, the giraffe, the elephant, the buffalo.<br>
+   We will <strong>love the forest wildlife</strong> —<br>
+   the jaguar, the Royal Bengal Tiger.<br>
+   <strong>We will maintain the beauty of our wildlife.</strong>`,
+
+  `We will <strong>protect our rivers</strong> —<br>
+   the Ganga, the Yamuna, the Brahmaputra, the Narmada.<br>
+   We will <strong>not spoil our rivers</strong>.<br>
+   Because the river is not ours to spoil —<br>
+   the river belongs to the fish, the dolphin,<br>
+   the crocodile, the gharial, the turtle —<br>
+   and only then to us.<br>
+   <strong>We will maintain the beauty of our rivers.</strong>`,
+
+  `We will <strong>protect the air wildlife</strong> —<br>
+   the eagle, the owl, the falcon, the vulture.<br>
+   We will <strong>not kill the birds with pollution</strong>.<br>
+   The sparrow is vanishing from our cities —<br>
+   and this is a sorrowful experience.<br>
+   The birds are also the part of the Earth like us.<br>
+   We humans do not have any right to vanish their life.<br>
+   <strong>We will maintain the beauty of our air.</strong>`,
+
+  `Our determination is to <strong>connect</strong><br>
+   with the natural wildlife of the Earth.<br>
+   When we connect with the wildlife,<br>
+   then we will understand and experience<br>
+   why they are so important for us —<br>
+   how they give us our life,<br>
+   our purpose of life, our existence of life.<br>
+   <strong>We will maintain the beauty of our wildlife.</strong>`,
+
+  `The wildlife is not separate from us —<br>
+   we are the <strong>component of the natural wildlife</strong>.<br>
+   Not totally separated from them —<br>
+   but our soul, our bloodline, is always<br>
+   dedicated toward the wildlife of nature.<br>
+   <strong>We will maintain the beauty of our wildlife.</strong><br>
+   <strong>Jai Shree Ram.</strong>`
+];
+
+function initDetermination(){
+  const detEl = document.getElementById('determinationQuote');
+  const detDots = document.getElementById('detDots');
+  const detPrev = document.getElementById('detPrev');
+  const detNext = document.getElementById('detNext');
+  if(!detEl) return;
+  let d = 0; let detTimer = null;
+  if(detDots){
+    detDots.innerHTML = '';
+    DETERMINATIONS.forEach((_, i)=>{
+      const dot = document.createElement('span');
+      if(i === 0) dot.classList.add('active');
+      dot.addEventListener('click', ()=>{ d = i; renderDet(); resetDetTimer(); });
+      detDots.appendChild(dot);
+    });
+  }
+  function renderDet(){
+    detEl.style.opacity = '0';
+    setTimeout(()=>{ detEl.innerHTML = DETERMINATIONS[d]; detEl.style.opacity = '1'; }, 300);
+    if(detDots){ [...detDots.children].forEach((dot, i)=>dot.classList.toggle('active', i===d)); }
+  }
+  function nextDet(){ d = (d + 1) % DETERMINATIONS.length; renderDet(); }
+  function prevDet(){ d = (d - 1 + DETERMINATIONS.length) % DETERMINATIONS.length; renderDet(); }
+  function resetDetTimer(){ clearInterval(detTimer); detTimer = setInterval(nextDet, 10000); }
+  detEl.innerHTML = DETERMINATIONS[0]; detEl.style.opacity = '1';
+  if(detNext) detNext.addEventListener('click', ()=>{ nextDet(); resetDetTimer(); });
+  if(detPrev) detPrev.addEventListener('click', ()=>{ prevDet(); resetDetTimer(); });
+  resetDetTimer();
+}
+
+function initQuotes(){
+  const heroQ = document.getElementById('heroQuote');
+  if(heroQ){
+    const quotes = QUOTE_LIBRARY.heroQuotes; let i = 0;
+    setInterval(()=>{
+      heroQ.style.opacity = '0';
+      setTimeout(()=>{ i = (i+1) % quotes.length; heroQ.textContent = quotes[i].text; heroQ.style.opacity = '1'; }, 500);
+    }, 8000);
+  }
+  buildQuoteRotator('wheelQuotes', document.getElementById('wheelQuoteText'), document.getElementById('wheelQuoteAuthor'), document.getElementById('wheelQuoteDots'), 7000);
+  buildQuoteRotator('pillarQuotes', document.getElementById('pillarQuoteText'), document.getElementById('pillarQuoteAuthor'), document.getElementById('pillarQuoteDots'), 7000);
+  buildQuoteRotator('waterQuotes', document.getElementById('waterQuoteText'), document.getElementById('waterQuoteAuthor'), document.getElementById('waterQuoteDots'), 7000);
+  buildQuoteRotator('airQuotes', document.getElementById('airQuoteText'), document.getElementById('airQuoteAuthor'), document.getElementById('airQuoteDots'), 7000);
+  initDetermination();
+}
+
+/* ═══════ PARTICLES ═══════ */
+const particleCanvas = document.getElementById('particleCanvas');
+let pCtx = null, particles = [];
+function initParticles(){
+  pCtx = particleCanvas.getContext('2d');
+  particleCanvas.width = window.innerWidth; particleCanvas.height = window.innerHeight;
+  particles = [];
+  const count = Math.min(85, Math.floor(window.innerWidth / 20));
+  const colors = ['#4ade80','#5eead4','#38bdf8','#fcd34d','#ffffff'];
+  for(let i=0;i<count;i++){
+    particles.push({
+      x: Math.random()*particleCanvas.width, y: Math.random()*particleCanvas.height,
+      size: Math.random()*2.4+0.6, speedX: (Math.random()-0.5)*0.32, speedY: (Math.random()-0.5)*0.32,
+      opacity: Math.random()*0.5+0.15, color: colors[Math.floor(Math.random()*colors.length)]
+    });
+  }
+  animateParticles();
+}
+function animateParticles(){
+  if(!pCtx) return;
+  pCtx.clearRect(0,0,particleCanvas.width,particleCanvas.height);
+  for(const p of particles){
+    p.x += p.speedX; p.y += p.speedY;
+    if(p.x<0) p.x=particleCanvas.width; if(p.x>particleCanvas.width) p.x=0;
+    if(p.y<0) p.y=particleCanvas.height; if(p.y>particleCanvas.height) p.y=0;
+    pCtx.beginPath(); pCtx.arc(p.x,p.y,p.size,0,Math.PI*2);
+    pCtx.fillStyle = p.color; pCtx.globalAlpha = p.opacity; pCtx.fill();
+  }
+  pCtx.globalAlpha = 1;
+  requestAnimationFrame(animateParticles);
+}
+
+function initScrollReveal(){
+  const els = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('visible'); io.unobserve(e.target); } });
+  },{ threshold:0.12 });
+  els.forEach(el=>io.observe(el));
+}
+
+/* ═══════ WHEEL DATA ═══════ */
+const wheelData = {
+  land: { title: 'Land Wildlife', role: 'Prithvi Jeevan · The First Pillar',
+    text: `Only <span class="c-grass">8% of the Earth's land</span> is true wildlife — because <span class="c-fire">22% is occupied by humans</span>. The four kingdoms of land wildlife are <span class="c-snow">Snow</span>, <span class="c-desert">Desert</span>, <span class="c-grass">Grassland</span>, and <span class="c-forest">Forest</span>. Each is a complete world of survival.`,
+    tag: 'Pillar 1 — Land' },
+  water: { title: 'Aquatic Wildlife', role: 'Jal Jeevan · The Second Pillar',
+    text: `The <span class="c-ocean">50% contribution</span> of the mountains and the ocean gives us <span class="c-blue">freshwater</span> — the rivers, the lakes. Because of the freshwater there is <span class="c-blue">aquatic life</span> — fish, crocodiles, dolphins, hippos — and also the <span class="c-sky">migratory birds</span> and the <span class="c-green">human lifeline</span>.`,
+    tag: 'Pillar 2 — Water' },
+  air: { title: 'Air Wildlife', role: 'Vayu Jeevan · The Third Pillar',
+    text: `The <span class="c-sky">air</span> is not visible — but we can <span class="c-green">feel it</span>. That is her beauty. The air contains <span class="c-blue">nitrogen, oxygen</span>, and many gases essential for life. The air wildlife is the <span class="c-fire">eagles</span>, <span class="c-sky">owls</span>, <span class="c-snow">vultures</span> — the carnivores and herbivores of the sky.`,
+    tag: 'Pillar 3 — Air' },
+  forest: { title: 'Forest Life', role: 'The Lungs of the Earth',
+    text: `The <span class="c-forest">Amazon rainforest</span> is the spirit of the <span class="c-fire">Jaguar</span>. The <span class="c-forest">Indian jungle</span> is the spirit of the <span class="c-fire">Royal Bengal Tiger</span>. The forest is the mother of life — the source of <span class="c-green">oxygen</span>, the home of <span class="c-gold">countless species</span>.`,
+    tag: 'Land — Forest' }
+};
+function initWheel(){
+  const nodes = document.querySelectorAll('.wheel-node');
+  const info = document.getElementById('wheelInfo');
+  nodes.forEach(node=>{
+    node.addEventListener('click', ()=>{
+      nodes.forEach(n=>n.classList.remove('active'));
+      node.classList.add('active');
+      const d = wheelData[node.dataset.region];
+      if(!d) return;
+      info.innerHTML = `<h3>${d.title}</h3><div class="role">${d.role}</div><p>${d.text}</p><div class="pillar-tag">${d.tag}</div>`;
+    });
+  });
+}
+
+/* ═══════ WIKIMEDIA IMAGE LOADER ═══════ */
+async function fetchWikimediaImage(query){
+  try{
+    const resp = await fetch(`https://commons.wikimedia.org/w/api.php?action=query&generator=search&gsrsearch=${encodeURIComponent(query)}&gsrnamespace=6&gsrlimit=6&prop=imageinfo&iiprop=url&iiurlwidth=800&format=json&origin=*`);
+    if(!resp.ok) return null;
+    const data = await resp.json();
+    if(data.query && data.query.pages){
+      const pages = Object.values(data.query.pages);
+      for(const page of pages){
+        if(page.imageinfo && page.imageinfo[0]){
+          const ii = page.imageinfo[0];
+          const url = ii.thumburl || ii.url;
+          if(!url) continue;
+          const low = url.toLowerCase();
+          if(low.endsWith('.svg') || low.endsWith('.pdf')) continue;
+          return { url, title: page.title.replace('File:','').replace(/\.[a-z]+$/i,'') };
+        }
+      }
+    }
+    return null;
+  }catch(e){ return null; }
+}
+async function loadWikiImages(){
+  const imgs = document.querySelectorAll('.wiki-img');
+  for(const img of imgs){
+    if(img.dataset.fixedImage === 'true'){ img.style.opacity='1'; continue; }
+    const topic = img.dataset.wiki;
+    if(!topic) continue;
+    img.style.opacity = '0'; img.style.transition = 'opacity .8s ease';
+    const result = await fetchWikimediaImage(topic);
+    if(result && result.url){
+      img.src = result.url; img.alt = result.title || topic;
+      img.onload = ()=>{ img.style.opacity = '1'; };
+      img.onerror = ()=>{ img.src = `https://picsum.photos/seed/${encodeURIComponent(topic)}/800/800`; img.style.opacity='1'; };
+    } else {
+      img.src = `https://picsum.photos/seed/${encodeURIComponent(topic)}/800/800`;
+      img.style.opacity = '1';
+    }
+    await new Promise(r=>setTimeout(r, 100));
+  }
+}
+
+/* ═══════ SEVAK ═══════ */
+const sevakOrb = document.getElementById('sevakOrb');
+const sevakBadge = document.getElementById('sevakBadge');
+const sevakPanel = document.getElementById('sevakPanel');
+const sevakMessages = document.getElementById('sevakMessages');
+const sevakInput = document.getElementById('sevakInput');
+const sevakSend = document.getElementById('sevakSend');
+const sevakMic = document.getElementById('sevakMic');
+const sevakClose = document.getElementById('sevakClose');
+const sevakExpand = document.getElementById('sevakExpand');
+const sevakStatus = document.getElementById('sevakStatus');
+const sevakStatusText = document.getElementById('sevakStatusText');
+const navSevak = document.getElementById('navSevak');
+const fullpageOverlay = document.getElementById('fullpageOverlay');
+const fullpageQuestion = document.getElementById('fullpageQuestion');
+const fullpageAnswer = document.getElementById('fullpageAnswer');
+const fullpageScroll = document.getElementById('fullpageScroll');
+const fullpageCloseBtn = document.getElementById('fullpageCloseBtn');
+const fullpageSpeakBtn = document.getElementById('fullpageSpeakBtn');
+const fullpageCopyBtn = document.getElementById('fullpageCopyBtn');
+const lightboxOverlay = document.getElementById('lightboxOverlay');
+const lightboxImage = document.getElementById('lightboxImage');
+const lightboxCaption = document.getElementById('lightboxCaption');
+const lightboxClose = document.getElementById('lightboxClose');
+
+let isListening = false, isSpeaking = false, isProcessing = false;
+let recognition = null;
+let synthesis = window.speechSynthesis;
+let selectedVoice = null;
+let lastSpeakText = '';
+let panelOpen = false;
+let unreadCount = 1;
+let projectReadAloudOnce = false;
+
+const greetings = ["Namaste Sir, Sevak at your service! How may I guide your wildlife journey today?","Greetings, Sir! I'm awake and ready. What can I do for you?","Good to see you, Sir! Sevak reporting for duty. What's your command?","Ah, Sir! I was just thinking about the wild. What do you need?"];
+const thanks = ["You're most welcome, Sir. Anything else?","Always a pleasure to serve, Sir.","It's my honor, Sir. Sevak is here 24/7 for you.","No thanks needed, Sir. That's what I'm built for."];
+const apologies = ["I apologize, Sir. I couldn't process that. Could you rephrase?","My apologies, Sir. I didn't quite catch that. Could you try again?","Sir, I'm sorry but I'm not sure what you mean. Could you be more specific?","Pardon me, Sir. My circuits didn't compute that. Try again?"];
+
+const helpText = `Sir, here are some things you can ask me:<br>
+• <strong>"What is wildlife?"</strong> · <strong>"What are the three pillars?"</strong><br>
+• <strong>"Tell me about Snow Wildlife"</strong> · <strong>"What is a polar bear?"</strong><br>
+• <strong>"Tell me about the Snow Leopard"</strong> · <strong>"What is a Siberian Tiger?"</strong><br>
+• <strong>"Tell me about Desert Wildlife"</strong> · <strong>"What is a camel?"</strong><br>
+• <strong>"Tell me about the Asiatic Lion"</strong> · <strong>"African Elephant"</strong><br>
+• <strong>"Tell me about Grassland Wildlife"</strong> · <strong>"What is a giraffe?"</strong><br>
+• <strong>"African Lion"</strong> · <strong>"Grizzly Bear"</strong> · <strong>"Kodiak Bear"</strong><br>
+• <strong>"Tell me about Tropical Rainforest"</strong> · <strong>"What is a jaguar?"</strong><br>
+• <strong>"Royal Bengal Tiger"</strong> · <strong>"Tell me about the Amazon"</strong><br>
+• <strong>"Tell me about Aquatic Wildlife"</strong> · <strong>"Ganga Yamuna"</strong><br>
+• <strong>"What is a Ganges River Dolphin?"</strong> · <strong>"Tell me about Hippopotamus"</strong><br>
+• <strong>"Tell me about Air Wildlife"</strong> · <strong>"What is an eagle?"</strong><br>
+• <strong>"Tell me about the vulture"</strong> · <strong>"What is an owl?"</strong><br>
+• <strong>"Why are vultures important?"</strong> · <strong>"Why are birds dying in cities?"</strong><br>
+• <strong>"What is our determination?"</strong> · <strong>"Why protect wildlife?"</strong><br>
+• <strong>"Read the whole project"</strong> · <strong>"What can SEVAK do?"</strong><br>
+• <strong>"Who is your creator?"</strong> · <strong>"Who are you?"</strong>`;
+
+function getRandomFrom(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+function getTimeString(){ return new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit',second:'2-digit'}); }
+function getDateString(){ return new Date().toLocaleDateString([], {weekday:'long',year:'numeric',month:'long',day:'numeric'}); }
+function stripHtml(html){ const tmp = document.createElement('div'); tmp.innerHTML = html || ''; return (tmp.textContent || tmp.innerText || '').replace(/\s+/g,' ').trim(); }
+
+function openLightbox(src, caption){ lightboxImage.src = src; lightboxCaption.textContent = caption || ''; lightboxOverlay.classList.add('active'); }
+function closeLightbox(){ lightboxOverlay.classList.remove('active'); }
+lightboxClose.addEventListener('click', closeLightbox);
+lightboxOverlay.addEventListener('click', e=>{ if(e.target === lightboxOverlay) closeLightbox(); });
+
+function openFullPage(question){
+  fullpageQuestion.textContent = '❯ ' + question;
+  fullpageAnswer.innerHTML = '<div class="fp-loading" style="display:flex;gap:8px;padding:14px 0"><span class="sevak-typing" style="display:inline-flex"><span></span><span></span><span></span></span></div>';
+  fullpageOverlay.classList.add('active'); fullpageScroll.scrollTop = 0;
+  const inner = fullpageOverlay.querySelector('.fullpage-inner');
+  if(inner){ inner.style.animation = 'none'; void inner.offsetWidth; inner.style.animation = ''; }
+}
+function fillFullPage(html, image, imageAlt){
+  if(!fullpageOverlay.classList.contains('active')) return;
+  fullpageAnswer.innerHTML = html || '';
+  if(image){
+    const wrap = document.createElement('div'); wrap.className = 'fullpage-image'; wrap.title = 'Click to enlarge';
+    const img = document.createElement('img'); img.src = image; img.alt = imageAlt || 'Image'; img.loading = 'lazy';
+    img.addEventListener('click', ()=>openLightbox(image, imageAlt || ''));
+    wrap.appendChild(img);
+    if(imageAlt){ const cap = document.createElement('div'); cap.className = 'msg-caption'; cap.textContent = imageAlt; wrap.appendChild(cap); }
+    fullpageAnswer.appendChild(wrap);
+  }
+  fullpageScroll.scrollTop = 0;
+}
+function closeFullPage(){ fullpageOverlay.classList.remove('active'); fullpageSpeakBtn.classList.remove('speaking'); }
+fullpageCloseBtn.addEventListener('click', closeFullPage);
+fullpageSpeakBtn.addEventListener('click', ()=>{
+  if(isSpeaking){ synthesis.cancel(); isSpeaking=false; fullpageSpeakBtn.classList.remove('speaking'); updateStatus('idle'); return; }
+  if(lastSpeakText) speak(lastSpeakText);
+});
+fullpageCopyBtn.addEventListener('click', async ()=>{
+  const text = fullpageAnswer.innerText; if(!text) return;
+  try{ await navigator.clipboard.writeText(text); fullpageCopyBtn.textContent='✅'; }
+  catch(e){ fullpageCopyBtn.textContent='⚠️'; }
+  setTimeout(()=>{ fullpageCopyBtn.textContent='📋'; },1400);
+});
+
+function openPanel(){
+  sevakPanel.classList.add('open'); sevakOrb.classList.add('active');
+  panelOpen = true; unreadCount = 0; sevakBadge.classList.add('hidden');
+  setTimeout(()=>sevakInput.focus(), 300);
+  if(!projectReadAloudOnce){
+    projectReadAloudOnce = true;
+    const welcome = 'Namaste Sir or Madam. I am SEVAK, your Wildlife of the Earth project guide. I have the complete project knowledge loaded — every pillar, every creature, every wisdom. Do you have any query about this project, or would you like to know any topic from the wildlife of the Earth? I can explain it and read the answer aloud.';
+    addSevakMessage('sevak', '<strong>Complete Wildlife Memory Loaded</strong><br>Namaste Sir or Madam. I am ready to explain the Wildlife of the Earth — the three pillars of Land, Water, and Air; the snow, desert, grassland, and forest wildlife; the aquatic life of the rivers; and the great birds of the sky. Ask me anything. 🙏');
+    setTimeout(()=>speak(welcome),450);
+  }
+}
+function closePanel(){ sevakPanel.classList.remove('open'); sevakOrb.classList.remove('active'); panelOpen = false; }
+sevakOrb.addEventListener('click', ()=> panelOpen ? closePanel() : openPanel());
+sevakClose.addEventListener('click', closePanel);
+navSevak.addEventListener('click', ()=>{ openPanel(); sevakInput.focus(); });
+sevakExpand.addEventListener('click', ()=>{
+  const lastSevak = [...sevakMessages.querySelectorAll('.sevak-msg.sevak')].pop();
+  if(!lastSevak) return;
+  const html = lastSevak.innerHTML.replace(/<span class="ts">.*?<\/span>/,'');
+  const lastUser = [...sevakMessages.querySelectorAll('.sevak-msg.user')].pop();
+  openFullPage(lastUser ? lastUser.textContent.replace(/\d{1,2}:\d{2}(:\d{2})?\s*(AM|PM)?$/i,'').trim() : 'Answer');
+  fillFullPage(html);
+});
+
+function initSpeechRecognition(){
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if(!SpeechRecognition) return null;
+  const rec = new SpeechRecognition();
+  rec.continuous = false; rec.interimResults = true; rec.lang = 'en-IN'; rec.maxAlternatives = 3;
+  rec.onstart = ()=>{ isListening = true; updateStatus('listening'); sevakMic.classList.add('listening'); };
+  rec.onresult = (event)=>{
+    let finalT = '', interimT = '';
+    for(let i=event.resultIndex;i<event.results.length;i++){
+      const t = event.results[i][0].transcript;
+      if(event.results[i].isFinal) finalT += t; else interimT += t;
+    }
+    if(interimT){ sevakInput.value = interimT; sevakInput.placeholder = interimT; }
+    if(finalT){ sevakInput.value = finalT; stopListening(); processCommand(finalT); }
+  };
+  rec.onerror = (event)=>{
+    if(event.error === 'not-allowed') addSevakMessage('sevak', 'Sir, I need microphone access to hear you. Please enable it in your browser settings. 🙏');
+    else if(event.error !== 'aborted') addSevakMessage('sevak', getRandomFrom(apologies));
+    stopListening();
+  };
+  rec.onend = ()=>{
+    isListening = false; sevakMic.classList.remove('listening');
+    sevakInput.placeholder = 'Ask Sevak about wildlife, snow, desert, water, air...';
+    updateStatus(isProcessing ? 'processing' : 'idle');
+  };
+  return rec;
+}
+function startListening(){
+  if(isSpeaking){ synthesis.cancel(); isSpeaking=false; }
+  if(isListening){ stopListening(); return; }
+  if(!recognition){ recognition = initSpeechRecognition(); if(!recognition){ addSevakMessage('sevak','Sir, your browser doesn\'t support voice recognition. Please use Chrome or Edge. 💻'); return; } }
+  try{ recognition.start(); }catch(e){ stopListening(); setTimeout(startListening, 300); }
+}
+function stopListening(){ if(recognition){ try{ recognition.stop(); }catch(e){} } isListening=false; sevakMic.classList.remove('listening'); }
+
+function initVoices(){
+  const voices = synthesis.getVoices(); if(!voices.length) return;
+  const preferred = ['Google UK English Female','Google US English Female','Microsoft Zira - English (United States)','Microsoft Aria - English (United States)','Samantha','Karen','Moira','Tessa','Google UK English Male','Google US English Male','Alex','Fred'];
+  for(const pref of preferred){ const v = voices.find(x=>x.name.includes(pref)); if(v){ selectedVoice = v; return; } }
+  selectedVoice = voices.find(v=>v.lang.startsWith('en')) || voices[0];
+}
+function speak(text){
+  if(!synthesis) return; synthesis.cancel();
+  const clean = stripHtml(text); if(!clean) return;
+  const u = new SpeechSynthesisUtterance(clean);
+  if(selectedVoice) u.voice = selectedVoice;
+  u.lang = 'en-IN'; u.rate = 0.94; u.pitch = 1.12; u.volume = 1.0;
+  u.onstart = ()=>{ isSpeaking = true; fullpageSpeakBtn.classList.add('speaking'); updateStatus('speaking'); };
+  u.onend = ()=>{ isSpeaking = false; fullpageSpeakBtn.classList.remove('speaking'); updateStatus(isProcessing ? 'processing' : 'idle'); };
+  u.onerror = ()=>{ isSpeaking = false; fullpageSpeakBtn.classList.remove('speaking'); updateStatus('idle'); };
+  synthesis.speak(u);
+}
+
+function updateStatus(state){
+  sevakStatus.className = 'sevak-status';
+  switch(state){
+    case 'idle': sevakStatus.classList.add('idle'); sevakStatusText.textContent='Ready'; break;
+    case 'listening': sevakStatus.classList.add('listening'); sevakStatusText.textContent='Listening'; break;
+    case 'speaking': sevakStatus.classList.add('speaking'); sevakStatusText.textContent='Speaking'; break;
+    case 'processing': sevakStatus.classList.add('processing'); sevakStatusText.textContent='Thinking'; break;
+    default: sevakStatusText.textContent='Ready';
+  }
+}
+
+function addSevakMessage(type, html, image, imageAlt){
+  const msg = document.createElement('div');
+  msg.className = 'sevak-msg ' + type; msg.innerHTML = html;
+  if(image){
+    const wrap = document.createElement('div'); wrap.className = 'msg-img'; wrap.title = 'Click to enlarge';
+    const img = document.createElement('img'); img.src = image; img.alt = imageAlt || 'Image'; img.loading='lazy';
+    img.addEventListener('click', ()=>openLightbox(image, imageAlt || ''));
+    wrap.appendChild(img);
+    if(imageAlt){ const cap = document.createElement('div'); cap.className = 'msg-caption'; cap.textContent = imageAlt; wrap.appendChild(cap); }
+    msg.appendChild(wrap);
+  }
+  const ts = document.createElement('span'); ts.className = 'ts'; ts.textContent = getTimeString();
+  msg.appendChild(ts);
+  sevakMessages.appendChild(msg); sevakMessages.scrollTop = sevakMessages.scrollHeight;
+  if(!panelOpen && type === 'sevak'){ unreadCount++; sevakBadge.textContent = unreadCount; sevakBadge.classList.remove('hidden'); }
+  return msg;
+}
+function addTypingIndicator(){
+  const div = document.createElement('div'); div.className = 'sevak-typing'; div.id = 'sevakTyping';
+  div.innerHTML = '<span></span><span></span><span></span>';
+  sevakMessages.appendChild(div); sevakMessages.scrollTop = sevakMessages.scrollHeight;
+  return div;
+}
+function removeTypingIndicator(){ const t = document.getElementById('sevakTyping'); if(t) t.remove(); }
+
+/* ═══════ PROJECT MEMORY ═══════ */
+const PROJECT_MEMORY = {
+  name:'Wildlife of the Earth — The True Nature',
+  assistant:'SEVAK IVA (Intelligent Voice Assistant)',
+  creator:'Ayush Kumar Jha',
+  mission:'The wisdom of the wildlife of the Earth — the land, the ocean, and the air. Not Wikipedia knowledge — the wisdom of the raw nature, the life which is beyond the experience of humans, whose only purpose is to survive. To connect with the natural wildlife of the Earth, and to maintain its beauty — because their beauty is our blessing.',
+  pillars:[
+    'Pillar 1 — Land Wildlife (Snow, Desert, Grassland, Forest)',
+    'Pillar 2 — Aquatic / Water Wildlife (Freshwater, Rivers, Lakes)',
+    'Pillar 3 — Air Wildlife (Atmosphere, Birds, Sky)'
+  ],
+  features:['Three-pillar wheel','Snow / Desert / Grassland / Forest sections','Aquatic wildlife','Air wildlife','Determination carousel','Rotating quotes','Brightness toggle','Particle canvas','Voice input + speech output','Full-page answers with lightbox','Wikipedia lookup + Wikimedia images']
+};
+
+function projectReadout(){
+  return 'This is the Wildlife of the Earth project. It teaches three pillars: Land Wildlife, Aquatic or Water Wildlife, and Air Wildlife. The land wildlife is only eight percent of the Earth — snow, desert, grassland, and forest. The snow wildlife includes the polar bear, the snow leopard, the Siberian tiger. The desert wildlife includes the camel, the desert elephant, the Asiatic lion. The grassland wildlife includes the lion, the giraffe, the elephant, the buffalo, the grizzly bear. The forest wildlife includes the jaguar of the Amazon and the Royal Bengal Tiger of India. The aquatic wildlife comes from the fifty percent contribution of the mountains and the ocean — rivers, lakes, fish, crocodiles, dolphins, hippos. The air wildlife is the invisible element — the eagles, owls, vultures, sparrows. Our determination is to maintain the beauty of our wildlife — because they are part of us.';
+}
+function projectOverviewHTML(){
+  return `<strong>${PROJECT_MEMORY.name}</strong><br><br>${PROJECT_MEMORY.mission}<br><br><strong>Assistant:</strong> ${PROJECT_MEMORY.assistant}<br><strong>Creator:</strong> ${PROJECT_MEMORY.creator}<br><br><strong>Three Pillars:</strong><br>1. ${PROJECT_MEMORY.pillars[0]}<br>2. ${PROJECT_MEMORY.pillars[1]}<br>3. ${PROJECT_MEMORY.pillars[2]}<br><br><strong>Features:</strong><br>${PROJECT_MEMORY.features.map(f=>'• '+f).join('<br>')}`;
+}
+
+/* ═══════ WILDLIFE KNOWLEDGE BASE ═══════ */
+const wildlifeKB = [
+  { match:/(what is wildlife|define wildlife|about wildlife|meaning of wildlife)/i, wiki:'Wildlife',
+    html:`<strong>What is Wildlife?</strong><br><br>
+    Wildlife is the <strong>life of the raw nature</strong> — the life which is beyond the experience of humans, human tradition, human technology.<br><br>
+    The life which has <strong>only purpose to survive</strong> — and there is no other purpose of the wild animals, wild trees, wild mountains. The life of the true nature of the Earth is the wildlife — that is the truth.<br><br>
+    When we discuss the wild, it does not mean we are abusing. <strong>Wild is the true nature of the Earth.</strong> We have to understand and experience that — because this will give us wisdom and great knowledge for our life, even if we live beyond the wildlife.`,
+    speak:'Wildlife is the life of the raw nature — the life which is beyond the experience of humans. It is the life which has only purpose to survive. Wild is the true nature of the Earth — not an abuse, but the raw truth. To connect with wildlife is to get wisdom.' },
+
+  { match:/(three pillars|3 pillars|pillars of wildlife|main pillars)/i, wiki:'Wildlife',
+    html:`<strong>The Three Pillars of Wildlife of the Earth</strong><br><br>
+    <strong>1. Land Wildlife (Prithvi Jeevan)</strong> — Only 8% of the Earth's land is true wildlife. Snow, Desert, Grassland, and Forest.<br><br>
+    <strong>2. Aquatic / Water Wildlife (Jal Jeevan)</strong> — Freshwater from the 50% contribution of mountains and ocean. Rivers, lakes, fish, crocodiles, dolphins, hippos.<br><br>
+    <strong>3. Air Wildlife (Vayu Jeevan)</strong> — The invisible element — nitrogen, oxygen, and the birds of the sky. Eagles, owls, vultures, and all flying creatures.`,
+    speak:'The three pillars of wildlife are Land, Water, and Air. Land wildlife is only eight percent of the Earth. Aquatic wildlife is the freshwater from the rivers and lakes. Air wildlife is the invisible element — the atmosphere and all the birds.' },
+
+  { match:/(land wildlife|about land)/i, wiki:'Terrestrial animal',
+    html:`<strong>Land Wildlife — Prithvi Jeevan</strong><br><br>
+    The land wildlife is the wildlife of the 30% of the Earth. But this is also not the truth — because <strong>22% of the land is occupied by humans</strong>, which is not under wildlife.<br><br>
+    So we have just <strong>8% of the land</strong> for the wildlife of the land — the wild animals, the wild forest, the wild mountain, the wild tree.<br><br>
+    <strong>Four kingdoms of land wildlife:</strong><br>
+    ❄️ Snow Wildlife<br>
+    🏜️ Desert Wildlife<br>
+    🌾 Grassland Wildlife<br>
+    🌴 Forest Wildlife`,
+    speak:'Land wildlife is the wildlife of the thirty percent of the Earth. But twenty-two percent of that is occupied by humans. So only eight percent of the land is true wildlife. The four kingdoms are snow, desert, grassland, and forest.' },
+
+  { match:/(snow wildlife|about snow|polar bear)/i, wiki:'Polar bear',
+    html:`<strong>Snow Wildlife — The Ancient Ice Kingdom</strong><br><br>
+    At the ancient time — much, much ancient — there was a period when the snow covered more than <strong>90% of the land of the Earth</strong> — the Ice Age. This was truly amazing, and we have a lot of scientific evidence.<br><br>
+    Today's snow wildlife still carries that ancient spirit — <strong>Antarctica, the Arctic, the Himalayas</strong>. The great animals of the snow are:<br>
+    🐻‍❄️ <strong>Polar Bear</strong> — the white sovereign of the Arctic<br>
+    🐆 <strong>Snow Leopard</strong> — the ghost of the Himalayas<br>
+    🐅 <strong>Siberian Tiger</strong> — the largest cat on Earth`,
+    speak:'Snow wildlife is the first pillar of the land. At the ancient time the snow covered more than ninety percent of the Earth — the Ice Age. Today the snow wildlife still carries that ancient spirit — in Antarctica, the Arctic, the Himalayas. The polar bear, the snow leopard, and the Siberian tiger are the great animals of the snow.' },
+
+  { match:/(polar bear)/i, wiki:'Polar bear',
+    html:`<strong>Polar Bear — The White Sovereign of the Arctic</strong><br><br>
+    The <strong>polar bear</strong> is the great white wanderer of the Arctic. It walks on drifting ice, swims for miles, and waits for seals at breathing holes.<br><br>
+    Its fur is <strong>not white — it is transparent and hollow</strong>, made to hold warmth and reflect light. Its skin underneath is black, to absorb the sun's warmth.<br><br>
+    It is the true sovereign of the snow.`,
+    speak:'The polar bear is the great white sovereign of the Arctic. It walks on drifting ice and swims for miles. Its fur is not white — it is transparent and hollow, made to hold warmth. Its skin is black to absorb the sun\'s warmth. It is the sovereign of the snow.' },
+
+  { match:/(snow leopard)/i, wiki:'Snow leopard',
+    html:`<strong>Snow Leopard — The Ghost of the Mountains</strong><br><br>
+    The <strong>snow leopard</strong> is called the "ghost of the mountains" — a solitary hunter of the high Himalayas. It is so silent that even shepherds rarely see it.<br><br>
+    Its long tail balances it on cliffs; its fur holds warmth; its paws are snowshoes. It is the very spirit of the Indian Himalayan wilderness.<br><br>
+    Only a few thousand remain — critically endangered.`,
+    speak:'The snow leopard is called the ghost of the mountains. It is a solitary hunter of the high Himalayas. Its long tail balances it on cliffs. Its paws are snowshoes. It is the spirit of the Indian Himalayan wilderness — critically endangered.' },
+
+  { match:/(siberian tiger|amur tiger)/i, wiki:'Siberian tiger',
+    html:`<strong>Siberian Tiger — The Snow Tiger</strong><br><br>
+    The <strong>Siberian tiger</strong> is the largest cat on Earth — a hunter of the frozen forests of Russia and China.<br><br>
+    Its fur is thicker and paler than its Bengal cousin; its body is built for snow. It walks alone through birch forests where wolves fear to pass.<br><br>
+    Fewer than 600 remain in the wild.`,
+    speak:'The Siberian tiger is the largest cat on Earth. It lives in the frozen forests of Russia and China. Its fur is thicker and paler than its Bengal cousin — its body is built for snow. It walks alone through birch forests. Fewer than six hundred remain in the wild.' },
+
+  { match:/(desert wildlife|about desert|camel)/i, wiki:'Camel',
+    html:`<strong>Desert Wildlife — The Courage of the Sand</strong><br><br>
+    The desert is where water vanishes but life does not. From the <strong>Sahara</strong> to the <strong>Kalahari</strong>, from the <strong>Thar</strong> of India to the deserts of Arabia, life has learned the deepest wisdom of survival.<br><br>
+    The great animals of the desert:<br>
+    🐪 <strong>Camel</strong> — the ship of the desert<br>
+    🐘 <strong>African Elephant</strong> — the desert wanderer of the Kalahari<br>
+    🦁 <strong>Asiatic Lion</strong> — the pride of Gir, India`,
+    speak:'Desert wildlife is the second kingdom of the land. The desert is where water vanishes but life does not. From the Sahara to the Kalahari, from the Thar of India to the deserts of Arabia. The camel, the desert elephant, and the Asiatic lion are the great animals of the desert.' },
+
+  { match:/(camel|ship of the desert)/i, wiki:'Camel',
+    html:`<strong>Camel — The Ship of the Desert</strong><br><br>
+    The <strong>camel</strong> is the greatest walking miracle of the desert. Its hump stores <strong>fat — not water</strong> — which can be converted to energy and moisture.<br><br>
+    Its eyelashes shield against sand; its nostrils close on demand; its feet are wide pads for sand.<br><br>
+    It can drink <strong>100 litres in 10 minutes</strong> and then walk for days without a sip.`,
+    speak:'The camel is the greatest walking miracle of the desert. Its hump stores fat, not water. Its eyelashes shield against sand, its nostrils close on demand, its feet are wide pads for sand. It can drink one hundred litres in ten minutes and walk for days without a sip.' },
+
+  { match:/(asiatic lion|gir lion|indian lion)/i, wiki:'Asiatic lion',
+    html:`<strong>Asiatic Lion — The Pride of Gir, India</strong><br><br>
+    The <strong>Asiatic lion</strong> lives only in the <strong>Gir Forest of Gujarat, India</strong> — a semi-arid, dry deciduous region.<br><br>
+    It is smaller than the African lion, has a shorter mane, and lives in the land that is India's own desert border.<br><br>
+    Around 700 only — protected with devotion.`,
+    speak:'The Asiatic lion lives only in the Gir Forest of Gujarat, India. It is smaller than the African lion, with a shorter mane. It lives in the semi-arid region of India. Around seven hundred remain — protected with devotion.' },
+
+  { match:/(grassland wildlife|about grassland|savanna|savannah)/i, wiki:'Grassland',
+    html:`<strong>Grassland Wildlife — The Sea of Grass</strong><br><br>
+    When we discuss the <strong>grassland</strong>, there are many countries that are grasslands — the <strong>USA, Africa, India, Alaska, South America</strong>.<br><br>
+    The great animals of the grassland:<br>
+    🦁 <strong>African Lion</strong> — the king<br>
+    🦒 <strong>Giraffe</strong> — the tallest<br>
+    🐘 <strong>African Bush Elephant</strong> — the largest land mammal<br>
+    🐻 <strong>Grizzly Bear</strong> and <strong>Kodiak Bear</strong> — the American giants<br>
+    🐃 <strong>African Buffalo</strong> — the strength of the herd<br>
+    🐆 <strong>Hyena & Leopard</strong> — the silent hunters`,
+    speak:'The grassland is the third kingdom of the land. There are many countries that are grasslands — the USA, Africa, India, Alaska, South America. The African lion, the giraffe, the African bush elephant, the grizzly bear, and the African buffalo are the great animals of the grassland.' },
+
+  { match:/(african lion|lion king|about lion)/i, wiki:'Lion',
+    html:`<strong>African Lion — The King of the Grassland</strong><br><br>
+    The <strong>African lion</strong> is the true sovereign of the grassland. It hunts in <strong>prides</strong> — the only big cat that lives in family groups.<br><br>
+    The male guards territory with a roar that carries 8 kilometres; the lionesses do most of the hunting, working as a team of silent shadows.<br><br>
+    The last true king of the African savanna.`,
+    speak:'The African lion is the true sovereign of the grassland. It hunts in prides — the only big cat that lives in family groups. The male\'s roar carries eight kilometres. The lionesses hunt together as a team. The last true king of the African savanna.' },
+
+  { match:/(giraffe)/i, wiki:'Giraffe',
+    html:`<strong>Giraffe — The Tall Wanderer</strong><br><br>
+    The <strong>giraffe</strong> is the tallest land animal on Earth — up to <strong>5.5 metres</strong>. Its long neck reaches acacia leaves no other animal can eat.<br><br>
+    Its tongue is 45 cm long and bluish-purple to protect it from the sun. Its heart weighs <strong>11 kg</strong> — the most powerful heart of any land animal.<br><br>
+    Spotted pattern is unique — like a fingerprint.`,
+    speak:'The giraffe is the tallest land animal on Earth — up to five and a half metres. Its long neck reaches the acacia leaves. Its tongue is forty-five centimetres long and bluish-purple. Its heart weighs eleven kilograms. Its spotted pattern is unique — like a fingerprint.' },
+
+  { match:/(african bush elephant|african elephant|bush elephant)/i, wiki:'African bush elephant',
+    html:`<strong>African Bush Elephant — The Largest Land Mammal</strong><br><br>
+    The <strong>African bush elephant</strong> is the world's largest land mammal — up to <strong>6,000 kg and 4 metres tall</strong>.<br><br>
+    It is a <strong>gardener of the savanna</strong>: it knocks down trees to open grassland, spreads seeds in its dung, and digs water holes that all other animals drink from.<br><br>
+    When elephants go, the whole savanna suffers.`,
+    speak:'The African bush elephant is the world\'s largest land mammal — up to six thousand kilograms and four metres tall. It is the gardener of the savanna — it knocks down trees, spreads seeds, digs water holes. When elephants go, the whole savanna suffers.' },
+
+  { match:/(grizzly bear|grizzly)/i, wiki:'Grizzly bear',
+    html:`<strong>Grizzly Bear — The Shadow of North America</strong><br><br>
+    In the <strong>American grassland</strong> and the wild of Alaska, you will see the <strong>Grizzly Bear</strong> — and its giant cousin the <strong>Kodiak Bear</strong>, the largest brown bear on Earth.<br><br>
+    They fish in rivers for salmon, walk the tundra, and sleep through winter in dens they dug themselves.<br><br>
+    Claws 10 cm long — can run 55 km/h.`,
+    speak:'The grizzly bear lives in the American grassland and Alaska. Its cousin the Kodiak bear is the largest brown bear on Earth. They fish for salmon, walk the tundra, and sleep through winter in dens they dug themselves. Claws ten centimetres long — can run fifty-five kilometres per hour.' },
+
+  { match:/(kodiak bear|kodiak)/i, wiki:'Kodiak bear',
+    html:`<strong>Kodiak Bear — The Largest Brown Bear</strong><br><br>
+    The <strong>Kodiak bear</strong> is the largest brown bear on Earth — up to <strong>700 kg</strong>. It lives on the Kodiak Archipelago of Alaska.<br><br>
+    It is the great western bear of the American wilderness — a symbol of raw power and survival.`,
+    speak:'The Kodiak bear is the largest brown bear on Earth — up to seven hundred kilograms. It lives on the Kodiak Archipelago of Alaska. It is the great western bear of the American wilderness.' },
+
+  { match:/(rainforest|tropical rainforest|amazon)/i, wiki:'Amazon rainforest',
+    html:`<strong>Tropical Rainforest — The Lungs of the Earth</strong><br><br>
+    Now we discuss the <strong>rainforest, tropical rainforest</strong>. In the America you will see the <strong>Amazon</strong> — the <strong>lungs of the Earth</strong>, producing 20% of the world's oxygen.<br><br>
+    And in the <strong>Indian jungles</strong> you will see the <strong>Royal Bengal Tiger</strong> — the spirit of the Indian jungle.<br><br>
+    The forest is the mother of life.`,
+    speak:'The rainforest is the fourth kingdom of the land. In America is the Amazon — the lungs of the Earth, producing twenty percent of the world\'s oxygen. In India is the jungle of the Royal Bengal Tiger. The forest is the mother of life.' },
+
+  { match:/(jaguar)/i, wiki:'Jaguar',
+    html:`<strong>Jaguar — The Spirit of the Amazon</strong><br><br>
+    The <strong>jaguar</strong> is the spirit of the Amazon jungle. It is the only big cat that kills with a bite to the skull — piercing the brain directly.<br><br>
+    Its name means "he who kills in one leap." It swims, it climbs, it hunts caiman in rivers.<br><br>
+    Its rosettes — those dark circles with dots inside — are the signature of the Amazon's soul.`,
+    speak:'The jaguar is the spirit of the Amazon jungle. It is the only big cat that kills with a bite to the skull. It swims, it climbs, it hunts caiman in rivers. Its rosettes — dark circles with dots inside — are the signature of the Amazon\'s soul.' },
+
+  { match:/(royal bengal tiger|bengal tiger|indian tiger)/i, wiki:'Bengal tiger',
+    html:`<strong>Royal Bengal Tiger — The Spirit of the Indian Jungle</strong><br><br>
+    The <strong>Royal Bengal Tiger</strong> is the spirit of the Indian jungle. It is <strong>India's national animal</strong>, the sovereign of the Sundarbans, the Ranthambore, the Kanha, the Jim Corbett.<br><br>
+    It hunts alone in silence; it swims rivers; it holds territories of 100 square kilometres. Its roar is the deepest song of the Indian wilderness.<br><br>
+    India still holds 75% of the world's wild tigers.`,
+    speak:'The Royal Bengal Tiger is the spirit of the Indian jungle. It is India\'s national animal — the sovereign of the Sundarbans, Ranthambore, Kanha, Jim Corbett. It hunts alone, swims rivers, holds territories of one hundred square kilometres. India still holds seventy-five percent of the world\'s wild tigers.' },
+
+  { match:/(aquatic wildlife|about water|water wildlife|freshwater)/i, wiki:'Freshwater ecosystem',
+    html:`<strong>Aquatic Wildlife — Jal Jeevan</strong><br><br>
+    Fifty percent of the contribution of the <strong>mountains and the ocean</strong> — because of the ocean there is rain, and because of the mountains there is glacier.<br><br>
+    Because of this, they give shape to the <strong>freshwater rivers</strong>. There are many lakes on the Earth — and they too are part of the freshwater.<br><br>
+    Because of the freshwater — because of the river — there is <strong>aquatic life</strong>. And not only aquatic life — but also the <strong>migratory birds</strong> who live there, and the <strong>human lifeline</strong> — because the river water is the source of agriculture and human life itself.`,
+    speak:'Aquatic wildlife is the second pillar. Fifty percent of the contribution of the mountains and the ocean gives us freshwater — the rivers and lakes. Because of the freshwater there is aquatic life — fish, crocodiles, dolphins, hippos. And also the migratory birds, and the human lifeline — because the river water is the source of agriculture and human life.' },
+
+  { match:/(ganga|yamuna|ganges|about ganges)/i, wiki:'Ganges',
+    html:`<strong>Ganga & Yamuna — The Mother Rivers of India</strong><br><br>
+    The <strong>Ganga</strong> and the <strong>Yamuna</strong> are not just rivers — they are mothers.<br><br>
+    They flow from the Himalayas, they carry the grace of the mountains, and they feed the plains of <strong>Punjab, Uttar Pradesh, and Bihar</strong> — the most fertile lands of the world.<br><br>
+    <strong>Ganga is not a river — Ganga is a living mother.</strong>`,
+    speak:'The Ganga and the Yamuna are not just rivers — they are mothers. They flow from the Himalayas and feed the plains of Punjab, Uttar Pradesh, and Bihar — the most fertile lands of the world. Ganga is not a river — Ganga is a living mother.' },
+
+  { match:/(ganges river dolphin|ganges dolphin|river dolphin|blind dolphin)/i, wiki:'Ganges river dolphin',
+    html:`<strong>Ganges River Dolphin — The Blind Swimmer</strong><br><br>
+    The <strong>Ganges river dolphin</strong> is nearly blind — it sees the world through sound. It swims the Ganga, Brahmaputra, and Meghna rivers, singing and listening, guiding itself through the dark water by echoes.<br><br>
+    It is <strong>India's national aquatic animal</strong>. When the river dies, the dolphin dies first — because it lives only in the living water.`,
+    speak:'The Ganges river dolphin is nearly blind — it sees the world through sound. It swims the Ganga, Brahmaputra, and Meghna rivers, guiding itself by echoes. It is India\'s national aquatic animal. When the river dies, the dolphin dies first.' },
+
+  { match:/(hippopotamus|hippo)/i, wiki:'Hippopotamus',
+    html:`<strong>Hippopotamus — The River Horse of Africa</strong><br><br>
+    The <strong>hippopotamus</strong> lives in the rivers and lakes of Africa. Its name means "river horse" in Greek, but it is more closely related to whales.<br><br>
+    It can hold its breath for <strong>5 minutes</strong> underwater. It walks the river bottom like a ballet dancer of <strong>1,500 kg</strong>.<br><br>
+    It is the great river king of Africa — and without freshwater, it cannot survive.`,
+    speak:'The hippopotamus lives in the rivers and lakes of Africa. Its name means river horse, but it is more closely related to whales. It holds its breath for five minutes underwater, and walks the river bottom like a ballet dancer. It is the great river king of Africa.' },
+
+  { match:/(crocodile|gharial|magar|crocodile in india)/i, wiki:'Crocodile',
+    html:`<strong>Crocodiles & Gharial — The Ancient River Kings</strong><br><br>
+    The <strong>gharial</strong> is the most ancient of India's river creatures — a fish-eating crocodile with a long, narrow snout, uniquely designed for the flowing water of the Ganga and Chambal.<br><br>
+    Crocodiles in general are the oldest survivors of the river — <strong>unchanged for 200 million years</strong>.<br><br>
+    They are the guardians of the freshwater world.`,
+    speak:'The gharial is the most ancient of India\'s river creatures — a fish-eating crocodile with a long narrow snout. Crocodiles are the oldest survivors of the river — unchanged for two hundred million years. They are the guardians of the freshwater world.' },
+
+  { match:/(air wildlife|about air|atmosphere|sky wildlife)/i, wiki:'Atmosphere of Earth',
+    html:`<strong>Air Wildlife — Vayu Jeevan</strong><br><br>
+    The air wildlife — because of the atmosphere, because of the most important — the air.<br><br>
+    Because of this, if this will not happen, then we cannot survive even for seconds. That is the most important because <strong>air contains nitrogen, oxygen, and many gases</strong> which are essential for life.<br><br>
+    But the wisdom of the air is most unique — because the air is <strong>not visible, but we can feel it</strong>. That is her beauty.`,
+    speak:'Air wildlife is the third pillar. Because of the atmosphere, because of the most important — the air. If this will not happen, we cannot survive even for seconds. Air contains nitrogen, oxygen, and many gases essential for life. The wisdom of the air is most unique — the air is not visible, but we can feel it. That is her beauty.' },
+
+  { match:/(eagle|about eagle|garuda)/i, wiki:'Eagle',
+    html:`<strong>Eagle — The King of the Sky</strong><br><br>
+    The <strong>eagle</strong> is the king of the sky. Its eyesight is 4–8 times sharper than a human's — it can see a rabbit from 3 kilometres away.<br><br>
+    It dives at <strong>320 km/h</strong>. Its wings carry it to 3,000 metres above the Earth.<br><br>
+    In India, the eagle is <strong>Garuda</strong> — the vehicle of Lord Vishnu, the symbol of divine vision.`,
+    speak:'The eagle is the king of the sky. Its eyesight is four to eight times sharper than a human\'s. It dives at three hundred and twenty kilometres per hour. Its wings carry it to three thousand metres. In India, the eagle is Garuda — the vehicle of Lord Vishnu.' },
+
+  { match:/(owl|about owl|ullu)/i, wiki:'Owl',
+    html:`<strong>Owl — The Silent Hunter of the Night</strong><br><br>
+    The <strong>owl</strong> is the silent hunter of the night. Its wings have fringed edges that break the sound of air — so it flies in total silence.<br><br>
+    Its head rotates <strong>270°</strong>. Its hearing is so precise that it can catch a mouse under 30 cm of snow.<br><br>
+    In India, the owl is the vehicle of <strong>Maa Lakshmi</strong> — the witness of wisdom.`,
+    speak:'The owl is the silent hunter of the night. Its wings have fringed edges that break the sound of air — it flies in total silence. Its head rotates two hundred and seventy degrees. Its hearing is so precise it can catch a mouse under thirty centimetres of snow. In India, the owl is the vehicle of Maa Lakshmi.' },
+
+  { match:/(vulture|about vulture|giddh|scavenger)/i, wiki:'Vulture',
+    html:`<strong>Vulture — The Sacred Purifier</strong><br><br>
+    The <strong>vulture</strong> is the most important bird for our environment that many people do not realise.<br><br>
+    Actually, the vulture <strong>kills the vanished — kills the diseases</strong>. It eats the dead animals that would otherwise spread <strong>rabies, anthrax, and other diseases</strong>.<br><br>
+    In ancient India, Parsis placed their dead for vultures to purify. The vulture is not a dirty bird — the vulture is a <strong>sacred purifier</strong>. Without vultures, disease spreads.<br><br>
+    Vultures in India fell 99% due to a drug — a tragedy.`,
+    speak:'The vulture is the most important bird for our environment. The vulture kills the vanished — kills the diseases. It eats the dead animals that would spread rabies and anthrax. In ancient India, Parsis placed their dead for vultures to purify. The vulture is not a dirty bird — the vulture is a sacred purifier. Vultures in India fell ninety-nine percent due to a drug — a tragedy.' },
+
+  { match:/(why are vultures important|vulture important|vulture benefits)/i, wiki:'Vulture',
+    html:`<strong>Why Vultures Are Important</strong><br><br>
+    The vulture is <strong>essential for our environment</strong>. It eats the dead animals that would otherwise spread:<br>
+    • <strong>Rabies</strong><br>
+    • <strong>Anthrax</strong><br>
+    • <strong>Other deadly diseases</strong><br><br>
+    Its stomach acid is <strong>pH 1</strong> — strong enough to kill almost all bacteria.<br><br>
+    Without vultures, disease spreads. In India, vulture numbers fell 99% in the 1990s — and rabies cases rose. The vulture is not a dirty bird — the vulture is a <strong>sacred purifier</strong>.`,
+    speak:'Vultures are essential for our environment. They eat the dead animals that would spread rabies, anthrax, and other diseases. Their stomach acid is pH one — strong enough to kill almost all bacteria. Without vultures, disease spreads. In India, vulture numbers fell ninety-nine percent in the nineteen nineties — and rabies cases rose. The vulture is a sacred purifier.' },
+
+  { match:/(why are birds dying|birds dying in cities|sparrow dying|air pollution birds)/i, wiki:'Bird conservation',
+    html:`<strong>Why Birds Are Dying in Our Cities</strong><br><br>
+    But what is happening in the cities, in the towns — we are not even seeing the <strong>sparrows, the small birds</strong>. They are dying from our <strong>pollution, air pollution</strong>.<br><br>
+    Because of <strong>human ego, because of human destructive mind</strong> — the ugly mind — the birds are no longer there. This is a very sorrowful experience for us.<br><br>
+    The sparrow was once the most common bird of every Indian home — now it is vanishing.<br><br>
+    <strong>The birds are also the part of the Earth like us. We humans do not have any right to vanish their life, to kill their life.</strong>`,
+    speak:'In the cities we are not even seeing the sparrows, the small birds. They are dying from our pollution, air pollution. Because of human ego, because of human destructive mind. This is a very sorrowful experience for us. The sparrow was once the most common bird of every Indian home — now it is vanishing. The birds are also the part of the Earth like us. We humans do not have any right to vanish their life.' },
+
+  { match:/(migratory birds|migration of birds|migratory)/i, wiki:'Bird migration',
+    html:`<strong>Migratory Birds — The Travellers of the Sky</strong><br><br>
+    Because of the freshwater — because of the rivers and lakes — there are also the <strong>migratory birds</strong> who live there.<br><br>
+    They travel thousands of kilometres every year — from Siberia to India, from the Arctic to Africa — following the water, following the warmth, following the ancient call of survival.<br><br>
+    They are the living proof that the Earth has no borders.`,
+    speak:'Because of the freshwater and the rivers, there are also the migratory birds who live there. They travel thousands of kilometres every year — from Siberia to India, from the Arctic to Africa — following the water, following the warmth, following the ancient call of survival. They are the living proof that the Earth has no borders.' },
+
+  { match:/(our determination|determination for wildlife|protect wildlife)/i, wiki:'Wildlife conservation',
+    html:`<strong>◆ Our Determination ◆</strong><br><br>
+    Now our determination — our determination is to <strong>connect with the natural wildlife of the Earth</strong>.<br><br>
+    When we connect with our natural wildlife, then we will understand and experience <strong>why they are so important for us</strong> — how they give us our life, our purpose of life, our existence of life.<br><br>
+    We have to <strong>maintain the beauty of our wildlife</strong> — because their life is for us. Their beauty is our blessing. We are the component of the natural wildlife — not totally separated from them — but our soul, our bloodline, is always dedicated toward the wildlife of nature.`,
+    speak:'Our determination is to connect with the natural wildlife of the Earth. When we connect with our natural wildlife, we will understand and experience why they are so important for us — how they give us our life, our purpose of life, our existence of life. We have to maintain the beauty of our wildlife — because their life is for us. Their beauty is our blessing. We are the component of the natural wildlife.' },
+
+  { match:/(why protect wildlife|why wildlife important|importance of wildlife)/i, wiki:'Wildlife conservation',
+    html:`<strong>Why Wildlife Is Important</strong><br><br>
+    Their life is for us. Their beauty is our blessing.<br><br>
+    <strong>1.</strong> The vulture purifies the Earth — without it, disease spreads.<br>
+    <strong>2.</strong> The elephant digs water holes for all animals.<br>
+    <strong>3.</strong> The bees pollinate our crops.<br>
+    <strong>4.</strong> The trees give us Pran Vayu — pure oxygen.<br>
+    <strong>5.</strong> The rivers give us freshwater — the source of agriculture.<br>
+    <strong>6.</strong> The air gives us nitrogen and oxygen — every second of our life.<br><br>
+    We are the component of the natural wildlife — not totally separated from them. Our soul, our bloodline, is always dedicated toward the wildlife of nature.`,
+    speak:'Why is wildlife important? Their life is for us. Their beauty is our blessing. The vulture purifies the Earth. The elephant digs water holes for all animals. The trees give us Pran Vayu. The rivers give us freshwater. The air gives us nitrogen and oxygen every second. We are the component of the natural wildlife — our soul is always dedicated toward the wildlife of nature.' },
+
+  { match:/(who are you|your name|what is sevak)/i, wiki:'Virtual assistant',
+    html:`<strong>I am SEVAK IVA</strong> — the Intelligent Voice Assistant of the Wildlife of the Earth project.<br><br>
+    I am your complete guide to:<br>
+    🦁 Land Wildlife (Snow, Desert, Grassland, Forest)<br>
+    🐋 Aquatic Wildlife (Rivers, Lakes, Freshwater)<br>
+    🦅 Air Wildlife (Atmosphere, Birds, Sky)<br><br>
+    I can explain every topic, read answers aloud, search Wikipedia, show images, tell quotes, and take you to any section.<br><br>
+    <strong>Created by:</strong> Ayush Kumar Jha`,
+    speak:'I am SEVAK IVA — the Intelligent Voice Assistant of the Wildlife of the Earth project. I am your complete guide to Land Wildlife, Aquatic Wildlife, and Air Wildlife. I was created by Ayush Kumar Jha.' },
+
+  { match:/(who is your creator|who created you|who made you|your creator)/i, wiki:'Software developer',
+    html:`<strong>My Creator</strong><br><br>
+    My creator is <strong>Ayush Kumar Jha</strong>.<br><br>
+    He built the Wildlife of the Earth project and brought me — SEVAK IVA — into existence as the Intelligent Voice Assistant that serves every seeker of the true nature of the Earth.`,
+    speak:'My creator is Ayush Kumar Jha. He built the Wildlife of the Earth project and brought me, SEVAK IVA, into existence as the Intelligent Voice Assistant that serves every seeker of the true nature of the Earth.' },
+
+  { match:/(jai shree ram|jai shri ram|jai jai ram)/i, wiki:'Ram',
+    html:`<strong>🙏 Jai Shree Ram 🙏</strong><br><br>
+    <em>"We are the component of the natural wildlife. Their life is for us. Their beauty is our blessing."</em><br><br>
+    May we always walk with the wild — and may we always protect it.<br><br>
+    🌍 <strong>Wildlife of the Earth — the true nature of life.</strong>`,
+    speak:'Jai Shree Ram. We are the component of the natural wildlife. Their life is for us. Their beauty is our blessing. May we always walk with the wild — and may we always protect it. Wildlife of the Earth — the true nature of life.' }
+];
+
+async function answerWildlife(cmd){
+  for(const item of wildlifeKB){
+    if(item.match.test(cmd)){
+      let image = null, imageAlt = null;
+      if(item.wiki){ const r = await fetchWikimediaImage(item.wiki); if(r){ image = r.url; imageAlt = r.title; } }
+      return { html:item.html, image, imageAlt, speakText:item.speak };
+    }
+  }
+  return null;
+}
+
+/* ═══════ EXTERNAL APIs ═══════ */
+async function fetchWikipediaSummary(topic){
+  try{
+    const r = await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(topic)}`);
+    if(!r.ok) return null;
+    const d = await r.json();
+    if(d.extract && d.extract.length > 0){
+      return { title: d.title, extract: d.extract, url: d.content_urls?.desktop?.page || `https://en.wikipedia.org/wiki/${encodeURIComponent(topic)}`, thumbnail: d.thumbnail?.source || null, originalImage: d.originalimage?.source || null };
+    }
+    return null;
+  }catch(e){ return null; }
+}
+async function searchWikipedia(query){
+  try{
+    const r = await fetch(`https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(query)}&format=json&origin=*&srlimit=5`);
+    if(!r.ok) return null;
+    const d = await r.json();
+    if(d.query?.search?.length) return fetchWikipediaSummary(d.query.search[0].title);
+    return null;
+  }catch(e){ return null; }
+}
+async function fetchDuckDuckGoAnswer(query){
+  try{
+    const r = await fetch(`https://api.duckduckgo.com/?q=${encodeURIComponent(query)}&format=json&no_html=1&skip_disambig=1`);
+    if(!r.ok) return null;
+    const d = await r.json();
+    if(d.AbstractText) return d.AbstractText;
+    if(d.Answer) return d.Answer;
+    return null;
+  }catch(e){ return null; }
+}
+async function getWeather(city){
+  try{
+    const g = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}&count=1&language=en&format=json`);
+    const gd = await g.json();
+    if(!gd.results?.length) return null;
+    const { latitude, longitude, name } = gd.results[0];
+    const w = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current_weather=true`);
+    const wd = await w.json();
+    const temp = wd.current_weather.temperature; const windspeed = wd.current_weather.windspeed; const code = wd.current_weather.weathercode;
+    let condition = 'Clear';
+    if(code<=3) condition='Clear'; else if(code<=48) condition='Foggy'; else if(code<=67) condition='Rainy'; else if(code<=77) condition='Snowy'; else if(code<=82) condition='Showers'; else if(code<=86) condition='Thunderstorm';
+    return { name, temp, windspeed, condition };
+  }catch(e){ return null; }
+}
+
+const jokes = ["Why don't scientists trust atoms? Because they make up everything!","Why did the developer go broke? Because he lost his domain in a bet.","What's a computer's favorite beat? An algo-rhythm.","I'm reading a book on anti-gravity. It's impossible to put down!","Parallel lines have so much in common. It's a shame they'll never meet.","What's the best thing about Switzerland? I don't know, but the flag is a big plus.","A SQL query walks into a bar, goes up to two tables and asks, 'Can I join you?'","There are only 10 kinds of people in this world: those who understand binary and those who don't.","Did you hear about the claustrophobic astronaut? He just needed a little space.","I invented a new word: plagiarism!"];
+const quotes = ["The only way to do great work is to love what you do. – Steve Jobs","Believe you can and you're halfway there. – Theodore Roosevelt","It does not matter how slowly you go as long as you do not stop. – Confucius","Success is not final, failure is not fatal: it is the courage to continue that counts. – Winston Churchill","The future belongs to those who believe in the beauty of their dreams. – Eleanor Roosevelt","Don't watch the clock; do what it does. Keep going. – Sam Levenson","The best way to predict the future is to invent it. – Alan Kay","You are never too old to set another goal or to dream a new dream. – C.S. Lewis","Act as if what you do makes a difference. It does. – William James","What you get by achieving your goals is not as important as what you become by achieving your goals. – Zig Ziglar"];
+const facts = ["Honey never spoils. Archaeologists have found pots of honey in ancient Egyptian tombs that are over 3,000 years old and still perfectly edible.","A day on Venus is longer than a year on Venus.","Octopuses have three hearts and blue blood.","The first oranges weren't orange; they were green.","The human brain uses about 20% of the body's oxygen and 25% of its glucose.","A group of flamingos is called a 'flamboyance'.","The moon has moonquakes.","Hot water freezes faster than cold water under certain conditions (Mpemba effect).","There are more possible iterations of a game of chess than there are atoms in the known universe."];
+
+async function processCommand(command){
+  const raw = command.trim().toLowerCase();
+  if(!raw) return;
+  addSevakMessage('user', command.trim());
+  sevakInput.value = '';
+  isProcessing = true; updateStatus('processing'); addTypingIndicator();
+  await new Promise(r=>setTimeout(r, 400 + Math.random()*500));
+  try{
+    const response = await handleCommand(raw, command.trim());
+    removeTypingIndicator();
+    const speechSource = response.speakText || response.text || (response.html ? stripHtml(response.html) : '');
+    lastSpeakText = stripHtml(speechSource).slice(0, 800);
+    if(response.html || response.image){ addSevakMessage('sevak', response.html || response.text || '', response.image, response.imageAlt); }
+    else if(response.text){ addSevakMessage('sevak', response.text); }
+    if(lastSpeakText) speak(lastSpeakText);
+    if(response.action === 'scrollTo'){ setTimeout(()=>document.getElementById(response.target)?.scrollIntoView({behavior:'smooth',block:'start'}),250); }
+    if(response.action === 'openWebsite'){ setTimeout(()=>window.open(response.url,'_blank'), 700); }
+  }catch(err){
+    console.error(err); removeTypingIndicator();
+    const f = getRandomFrom(apologies); lastSpeakText = f;
+    addSevakMessage('sevak', f); speak(f);
+  }
+  isProcessing = false; updateStatus('idle');
+}
+
+async function handleCommand(rawCmd, originalCmd){
+  if(/^(hello|hi|hey|namaste|good\s*(morning|afternoon|evening))/.test(rawCmd)) return { text: getRandomFrom(greetings) };
+  if(/(how are you|how's it going)/.test(rawCmd)) return { text: getRandomFrom(["I'm doing wonderfully, Sir!","I'm fantastic, Sir!","I'm at peak performance, Sir!"]) };
+  if(/(i am fine|i'm fine|doing well)/.test(rawCmd)) return { text: getRandomFrom(["That's wonderful to hear, Sir!","Excellent, Sir!","Glad to know, Sir!"]) };
+  if(/(thank|thanks|dhanyavad)/.test(rawCmd)) return { text: getRandomFrom(thanks) };
+  if(/(bye|goodbye|good\s*night)/.test(rawCmd)) return { text: "Goodbye Sir! Stay connected with the wild. 🌍 Jai Shree Ram." };
+  if(/\b(help|assist|what can you do)\b/.test(rawCmd)) return { text: helpText };
+
+  if(/(read|explain|describe|tell me about|what is)\s+(the\s+)?(whole|entire|complete|full)?\s*(project|website)/.test(rawCmd) || /(about this project|project features)/.test(rawCmd)) {
+    return { html: projectOverviewHTML(), speakText: projectReadout() };
+  }
+  if(/(which section|take me to|go to)\s+(.+)/.test(rawCmd)) {
+    const q = rawCmd.match(/(?:which section|take me to|go to)\s+(.+)/)[1];
+    const routes = [
+      {r:/wheel|pillar|door/,id:'wheel',name:'Three Pillars'},
+      {r:/land|earth/,id:'land',name:'Land Wildlife'},
+      {r:/snow|polar|arcti/,id:'snow',name:'Snow Wildlife'},
+      {r:/desert|camel|sahara/,id:'desert',name:'Desert Wildlife'},
+      {r:/grass|savanna|lion|giraffe/,id:'grassland',name:'Grassland Wildlife'},
+      {r:/forest|jungle|amazon|tiger|jaguar/,id:'forest',name:'Tropical Rainforest'},
+      {r:/water|river|aquatic|ocean|freshwater|ganga|dolphin/,id:'water',name:'Aquatic Wildlife'},
+      {r:/air|sky|bird|eagle|vulture|atmosphere/,id:'air',name:'Air Wildlife'},
+      {r:/determination|pledge/,id:'determination',name:'Our Determination'}
+    ];
+    const route = routes.find(x=>x.r.test(q));
+    if(route) return { text:`Taking you to the <strong>${route.name}</strong> section.`, action:'scrollTo', target:route.id };
+  }
+  if(/(who are you|your name)/.test(rawCmd)) {
+    return { html: wildlifeKB.find(x=>x.match.toString().includes('who are you'))?.html || 'I am SEVAK IVA.', speakText: 'I am SEVAK IVA, the Intelligent Voice Assistant of the Wildlife of the Earth project, created by Ayush Kumar Jha.' };
+  }
+  if(/(who is your creator|who created you)/.test(rawCmd)) return { text: "My creator is <strong>Ayush Kumar Jha</strong>." };
+  if(/(time|what time)/.test(rawCmd)) return { text: `Sir, the time is ${new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit',second:'2-digit'})}.` };
+  if(/(date|today)/.test(rawCmd)) return { text: `Sir, today is ${getDateString()}.` };
+  if(/\b(joke)\b/.test(rawCmd)) return { text: getRandomFrom(jokes) };
+  if(/(motivat|quote|inspiration)/.test(rawCmd)) return { text: getRandomFrom(quotes) };
+  if(/(fact|interesting)/.test(rawCmd)) return { text: getRandomFrom(facts) };
+  if(/(flip a coin)/.test(rawCmd)){ const r = Math.random() < 0.5 ? 'Heads' : 'Tails'; return { text: `Sir, the coin says: <strong>${r}</strong>!` }; }
+  if(/(roll a dice|dice)/.test(rawCmd)){ const r = Math.floor(Math.random()*6)+1; return { text: `Sir, the dice shows: <strong>${r}</strong>!` }; }
+
+  if(/^(show me|show|picture of|image of)\s+(.+)/.test(rawCmd)){
+    const match = rawCmd.match(/^(?:show me|show|picture of|image of)\s+(.+)/);
+    const query = match[1].trim();
+    const wiki = await searchWikipedia(query);
+    const imageToUse = wiki?.thumbnail || wiki?.originalImage || null;
+    if(imageToUse) return { html: `<strong>${wiki.title}</strong><br>${wiki.extract.substring(0,300)}...<br><a href="${wiki.url}" target="_blank">Read more</a>`, image: imageToUse, imageAlt: wiki.title, speakText: `Here is an image of ${query}.` };
+    const commonsImg = await fetchWikimediaImage(query);
+    if(commonsImg) return { html: `<strong>${query}</strong><br>Here is an image.`, image: commonsImg.url, imageAlt: commonsImg.title, speakText: `I found an image of ${query}.` };
+    return { text: `Sir, I couldn't find an image for "${query}".` };
+  }
+
+  const wildlife = await answerWildlife(rawCmd);
+  if(wildlife) return wildlife;
+
+  if(/(who is|what is|tell me about|explain|define|meaning of)\s+(.+)/.test(rawCmd)){
+    const match = rawCmd.match(/(?:who is|what is|tell me about|explain|define|meaning of)\s+(.+)/);
+    const query = match[1].trim();
+    const wiki = await searchWikipedia(query);
+    if(wiki){
+      const shortExtract = wiki.extract.length > 600 ? wiki.extract.substring(0,600)+'...' : wiki.extract;
+      const img = wiki.thumbnail || wiki.originalImage || null;
+      if(img) return { html: `<strong>${wiki.title}</strong><br>${shortExtract}<br><a href="${wiki.url}" target="_blank">Read more</a>`, image: img, imageAlt: wiki.title, speakText: `Here's what I found about ${query}.` };
+      return { html: `<strong>${wiki.title}</strong><br>${shortExtract}<br><a href="${wiki.url}" target="_blank">Read more</a>`, speakText: `Here's what I found about ${query}.` };
+    } else {
+      const ddg = await fetchDuckDuckGoAnswer(query);
+      if(ddg) return { text: `Sir, from DuckDuckGo: ${ddg}` };
+      return { text: `Sir, I couldn't find reliable information about "${query}".` };
+    }
+  }
+  if(/^(?:search|google|look up)\s+(?:for\s+)?(.+?)$/.test(rawCmd)){
+    const q = rawCmd.match(/^(?:search|google|look up)\s+(?:for\s+)?(.+?)$/)[1].trim();
+    return { text: `Searching Google for "${q}".`, action:'openWebsite', url:`https://www.google.com/search?q=${encodeURIComponent(q)}` };
+  }
+  if(/(?:play|open|search)\s+(.+?)\s+(?:on youtube|youtube)/.test(rawCmd)){
+    const q = rawCmd.match(/(?:play|open|search)\s+(.+?)\s+(?:on youtube|youtube)/)[1].trim();
+    return { text: `Opening YouTube for "${q}".`, action:'openWebsite', url:`https://www.youtube.com/results?search_query=${encodeURIComponent(q)}` };
+  }
+  if(/(?:temperature|weather|temp)\s+(?:in|of)\s+([a-zA-Z\s]+)/.test(rawCmd)){
+    const m1 = rawCmd.match(/(?:temperature|weather|temp)\s+(?:in|of)\s+([a-zA-Z\s]+)/);
+    const city = m1[1].trim(); const w = await getWeather(city);
+    if(w) return { text: `Sir, the weather in ${w.name} is ${w.temp}°C with ${w.condition.toLowerCase()} conditions. Wind speed: ${w.windspeed} km/h.` };
+    return { text: `Sir, I couldn't find weather information for "${city}".` };
+  }
+
+  const wikiFallback = await searchWikipedia(rawCmd);
+  if(wikiFallback){
+    const img = wikiFallback.thumbnail || wikiFallback.originalImage || null;
+    if(img) return { html:`<strong>${wikiFallback.title}</strong><br>${wikiFallback.extract.substring(0,400)}...<br><a href="${wikiFallback.url}" target="_blank">Read more</a>`, image: img, imageAlt: wikiFallback.title, speakText:`I found this for you.` };
+    return { html:`<strong>${wikiFallback.title}</strong><br>${wikiFallback.extract.substring(0,400)}...<br><a href="${wikiFallback.url}" target="_blank">Read more</a>`, speakText:`I found this for you.` };
+  }
+  return { text: getRandomFrom(apologies) };
+}
+
+sevakSend.addEventListener('click', ()=>{ if(isListening) stopListening(); const cmd = sevakInput.value.trim(); if(cmd) processCommand(cmd); });
+sevakInput.addEventListener('keydown', e=>{ if(e.key === 'Enter'){ e.preventDefault(); if(isListening) stopListening(); const cmd = sevakInput.value.trim(); if(cmd) processCommand(cmd); } });
+sevakMic.addEventListener('click', ()=>{ if(isListening) stopListening(); else startListening(); });
+document.addEventListener('keydown', e=>{
+  if(e.key !== 'Escape') return;
+  if(lightboxOverlay.classList.contains('active')) closeLightbox();
+  else if(fullpageOverlay.classList.contains('active')) closeFullPage();
+  else if(panelOpen) closePanel();
+});
+
+function initSevak(){
+  initVoices();
+  if(synthesis.onvoiceschanged !== undefined) synthesis.onvoiceschanged = initVoices;
+  sevakMessages.innerHTML = '';
+  addSevakMessage('sevak',
+    'Namaste Sir 🙏 I am <strong>SEVAK</strong> — your Wildlife of the Earth guide. I have <strong>complete knowledge</strong> of the project. Ask me anything:<br><br>' +
+    '• <em>"What is wildlife?"</em> · <em>"What are the three pillars?"</em><br>' +
+    '• <em>"Tell me about Snow Wildlife"</em> · <em>"Polar bear"</em><br>' +
+    '• <em>"Snow Leopard"</em> · <em>"Siberian Tiger"</em><br>' +
+    '• <em>"Tell me about Desert Wildlife"</em> · <em>"Camel"</em><br>' +
+    '• <em>"Asiatic Lion"</em> · <em>"Tell me about Grassland"</em><br>' +
+    '• <em>"African Lion"</em> · <em>"Giraffe"</em><br>' +
+    '• <em>"Tell me about Rainforest"</em> · <em>"Jaguar"</em><br>' +
+    '• <em>"Royal Bengal Tiger"</em> · <em>"Tell me about Aquatic Wildlife"</em><br>' +
+    '• <em>"Ganga"</em> · <em>"Ganges River Dolphin"</em><br>' +
+    '• <em>"Tell me about Air Wildlife"</em> · <em>"Eagle"</em><br>' +
+    '• <em>"Vulture"</em> · <em>"Why are vultures important?"</em><br>' +
+    '• <em>"Why are birds dying in cities?"</em><br>' +
+    '• <em>"What is our determination?"</em><br><br>' +
+    'Or type <strong>"help"</strong> for the full list.<br><span class="sevak-memory-pill">● COMPLETE WILDLIFE MEMORY READY</span>'
+  );
+  if(!window.SpeechRecognition && !window.webkitSpeechRecognition){
+    addSevakMessage('sevak', '⚠️ Sir, your browser does not support voice recognition. Please use Chrome or Edge.');
+  }
+}
+
+window.addEventListener('resize', ()=>{ if(pCtx){ particleCanvas.width = window.innerWidth; particleCanvas.height = window.innerHeight; } });
+
+function boot(){
+  initBrightness(); initQuotes(); initParticles(); initScrollReveal();
+  initWheel(); loadWikiImages(); initSevak();
+}
+if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
+else boot();
+
+})();
+</script>
+</body>
+</html>
